@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Data;
+using Service;
+using System.Net.Mail;
+using System.Net;
 
 namespace WebUI
 {
@@ -26,8 +29,20 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var smtpClient = new SmtpClient(Configuration["Smtp:Host"])
+            {
+                Port = int.Parse(Configuration["Smtp:Port"]),
+                Credentials = new NetworkCredential(Configuration["Smtp:Username"], Configuration["Smtp:Password"]),
+                EnableSsl = true,
+            };
             services.AddControllersWithViews();
             services.AddDbContext<StoreDBContext>(options =>options.UseNpgsql(parseElephantSQLURL(this.Configuration.GetConnectionString("StoreDB"))));
+            services.AddScoped<IRepository, RepoDB>();
+            //services.AddScoped<IEmailService, EmailService>(options => options.);
+            services.AddSingleton<IEmailService>( new EmailService(smtpClient));
+            services.AddScoped<IServices, Services>();
+            
+            
         }
         public static string parseElephantSQLURL(string uriString)
         {

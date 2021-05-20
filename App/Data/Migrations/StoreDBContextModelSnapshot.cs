@@ -21,7 +21,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("StoreModels.Customer", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("CustomerID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -35,7 +35,7 @@ namespace Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
+                    b.HasKey("CustomerID");
 
                     b.ToTable("Customers");
                 });
@@ -72,7 +72,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("StoreModels.Location", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("LocationID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -83,7 +83,7 @@ namespace Data.Migrations
                     b.Property<string>("LocationName")
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
+                    b.HasKey("LocationID");
 
                     b.ToTable("Locations");
                 });

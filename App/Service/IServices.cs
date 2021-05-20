@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using StoreModels;
 namespace Service
 {
-    public interface IService
+    public interface IServices
     {
         /// <summary>
         /// Create a new Customer and add it to the repository

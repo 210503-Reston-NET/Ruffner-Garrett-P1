@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(StoreDBContext))]
-    [Migration("20210520175357_Migrations")]
+    [Migration("20210520224105_Migrations")]
     partial class Migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +23,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("StoreModels.Customer", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("CustomerID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -37,7 +37,7 @@ namespace Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
+                    b.HasKey("CustomerID");
 
                     b.ToTable("Customers");
                 });
@@ -74,7 +74,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("StoreModels.Location", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("LocationID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -85,7 +85,7 @@ namespace Data.Migrations
                     b.Property<string>("LocationName")
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
+                    b.HasKey("LocationID");
 
                     b.ToTable("Locations");
                 });

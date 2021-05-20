@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Service
 {
-    public class Services : IService
+    public class Services : IServices
     {
         private IRepository _repo;
         private IEmailService _emailService;
@@ -22,8 +22,8 @@ namespace Service
         public void AddCustomer(string name, string address, string email)
         {   
             Log.Debug("Adding new customer: {0}, {1}, {2}", name, address, email);
-             MailAddress cEmail = null;
-             Customer newCustomer = null;
+             MailAddress cEmail = new MailAddress(email);
+             Customer newCustomer = new Customer(name,address, email);
             try{
                 cEmail = new MailAddress(email);
                 newCustomer = new Customer(name, address, email);
@@ -85,25 +85,25 @@ namespace Service
         public void AddProductToInventory(Location location, Product product, int stock)
         {
            
-            //Create new Item for inventory
-            // Item newItem = new Item(product, stock);
-            // //check inventory for product
-            // foreach (Item item in location.InventoryItems)
-            // {
-            //     if(newItem.Product.Name == item.Product.Name)
-            //     {
-            //         throw new Exception("Product is Already in Inventory");
-            //     }
-            // }
-            // //Product is not in inventory
-            // //Add Item to Inventory
-            // try{
-            //     location.InventoryItems.Add(newItem);
-            //     _repo.AddProductToInventory(location, newItem);
-            // }catch(Exception ex){
-            //     Log.Error("Failed to Add Product To Inventory {0} \n{1}",ex.Message, ex.StackTrace);
-            //     throw new Exception("Failed to Add product to Inventory");
-            // }
+            // Create new Item for inventory
+            Item newItem = new Item(product.ProductID, stock);
+            //check inventory for product
+            foreach (Item item in location.InventoryItems)
+            {
+                if(newItem.Product.Name == item.Product.Name)
+                {
+                    throw new Exception("Product is Already in Inventory");
+                }
+            }
+            //Product is not in inventory
+            //Add Item to Inventory
+            try{
+                location.InventoryItems.Add(newItem);
+                _repo.AddProductToInventory(location, newItem);
+            }catch(Exception ex){
+                Log.Error("Failed to Add Product To Inventory {0} \n{1}",ex.Message, ex.StackTrace);
+                throw new Exception("Failed to Add product to Inventory");
+            }
         }
 
         public List<Customer> GetAllCustomers()
