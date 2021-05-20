@@ -1,133 +1,125 @@
-using System.Runtime.CompilerServices;
 using System.Data;
 using System.Collections.Generic;
 using System.Linq;
-using Models =StoreModels;
-using Entity = Data.Entities;
+using StoreModels;
 using System;
 using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
-using Npgsql;
 
 namespace Data
 {
     public class RepoDB : IRepository
     {
-        private Entity.p0Context _context;
-        public RepoDB(Entity.p0Context context)
+        private StoreDBContext _context;
+        public RepoDB(StoreDBContext context)
         {
             _context = context;
         }
         private IDbContextTransaction _transaction;
-        public void AddCustomer(Models.Customer customer)
+        public void AddCustomer(Customer customer)
         {
             _context.Customers.Add(
-                new Entity.Customer
-                {
-                    Name = customer.Name,
-                    Address = customer.Address,
-                    Email = customer.Email.Address
-                }
+                customer
             );
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
         }
 
-        public void AddLocation(Models.Location location)
+        public void AddLocation(Location location)
         {
             _context.Locations.Add(
-                new Entity.Location
-                {
-                   LocationName = location.LocationName,
-                   Address = location.Address
-                }
+                location
             );
            _context.SaveChanges();
            _context.ChangeTracker.Clear();
         }
 
-        public void AddProduct(Models.Product product)
+        public void AddProduct(Product product)
         {
             _context.Products.Add(
-               new Entity.Product
-               {
-                    Name = product.ProductName,
-                    Price = product.Price
-               }
+                product
+            //    new Entity.Product
+            //    {
+            //         Name = product.ProductName,
+            //         Price = product.Price
+            //    }
             );
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
         }
 
-        public void AddProductToInventory(Models.Location location, Models.Item item)
+        public void AddProductToInventory(Location location, Item item)
         {
+            location.InventoryItems.Add(item);
             _context.InventoryItems.Add( 
-                new Entity.InventoryItem
-                {
-                    Location = GetLocation(location),
-                    Product = GetProduct(item.Product),
-                    Quantity = item.Quantity
-                }
+                item
+                // location.InventoryItems.Add(item)
+                // new Entity.InventoryItem
+                // {
+                //     Location = GetLocation(location),
+                //     Product = GetProduct(item.Product),
+                //     Quantity = item.Quantity
+                // }
            );
            _context.SaveChanges();
            _context.ChangeTracker.Clear();
         }
 
-        public List<Models.Customer> GetAllCustomers()
+        public List<Customer> GetAllCustomers()
         {
             return _context.Customers.Select(
-                customer => new Models.Customer(customer.Name, customer.Address, new System.Net.Mail.MailAddress(customer.Email), customer.Id)
+                customer => new Customer(customer.Name, customer.Address, customer.Email, customer.CustomerID)
             ).ToList();
         }
 
-        public List<Models.Location> GetAllLocations()
+        public List<Location> GetAllLocations()
         {
             //WHAT HAVE I CREATED
-            return _context.Locations.Select(
-                location => new Models.Location(
-                    location.LocationName, 
-                    location.Address, 
-                    location.InventoryItems.Select( 
-                        i => new Models.Item(
-                            new Models.Product(
-                                i.Product.Name, 
-                                (double) i.Product.Price
-                            ),
-                            (int) i.Quantity
-                        )
-                    ).ToList()
-                )
-            ).ToList();
+            return _context.Locations.Select(location => location).ToList();
+            //     location => new Location(
+            //         location.LocationName, 
+            //         location.Address, 
+            //         location.InventoryItems.Select( 
+            //             i => new Item(
+            //                 new  Product(
+            //                     i.Product.Name, 
+            //                     (double) i.Product.Price
+            //                 ),
+            //                 (int) i.Quantity
+            //             )
+            //         ).ToList()
+            //     )
+            // ).ToList();
         }
 
-        public List<Models.Product> GetAllProducts()
+        public List<Product> GetAllProducts()
         {
             return _context.Products.Select(
-                product => new Models.Product(product.Name, (double) product.Price)
+                product => new Product(product.Name, (double) product.Price)
             ).ToList();
         }
 
-        public List<Models.Order> GetOrders(Models.Customer customer, bool price, bool asc)
+        public List<Order> GetOrders(Customer customer, bool price, bool asc)
         {
             //OH GOD ITS SO GROSS
             //SOMEONE HELP ME FIND A BETTER WAY
             //Had to use client side Evelaution for where clause            
-            List<Models.Order> mOrders=  _context.Orders.Select(
-                order => new Models.Order(
-                   new Models.Customer(order.Customer.Name, order.Customer.Address, new System.Net.Mail.MailAddress(order.Customer.Email), order.Customer.Id),
-                   new Models.Location(order.Location.LocationName, order.Location.Address),
-                   order.OrderItems.Select(
-                       i => new Models.Item(
-                           new Models.Product(
-                               i.Product.Name,
-                               (double) i.Product.Price),
-                               (int) i.Quantity)).ToList(),
-                (DateTime) order.Date)
-            ).AsEnumerable().Where(order => order.Customer.Name == customer.Name).ToList();
+            List<Order> mOrders=  _context.Orders.Select(
+                 order => order
+                //    new Customer(order.Customer.Name, order.Customer.Address,order.Customer.Email, order.Customer.ID),
+                //    new Location(order.Location.LocationName, order.Location.Address),
+                //    order.Items.Select(
+                //        i => new Item(
+                //            new Product(
+                //                i.Product.Name,
+                //                (double) i.Product.Price),
+                //                (int) i.Quantity)).ToList(),
+                // (DateTime) order.Date)
+            ).AsEnumerable().Where(order => order.Customer.CustomerID == customer.CustomerID).ToList();
 
-            Func<Models.Order, double> orderbyprice = order => order.Total;
-            Func<Models.Order, DateTime> orderbydate = order => order._date;
-            IOrderedEnumerable<StoreModels.Order> temp = null;
+            Func<Order, double> orderbyprice = order => order.Total;
+            Func<Order, DateTime> orderbydate = order => order.Date;
+            IOrderedEnumerable<Order> temp = null;
 
             if(price){
                 //order by total
@@ -146,25 +138,26 @@ namespace Data
             return mOrders;         
         }
 
-        public List<Models.Order> GetOrders(Models.Location location, bool price, bool asc)
+        public List<Order> GetOrders(Location location, bool price, bool asc)
         {
-            List<Models.Order> mOrders=  _context.Orders.Select(
-                order => new Models.Order(
-                   new Models.Customer(order.Customer.Name, order.Customer.Address, new System.Net.Mail.MailAddress(order.Customer.Email), order.Customer.Id),
-                   new Models.Location(order.Location.LocationName, order.Location.Address),
-                   order.OrderItems.Select(
-                       i => new Models.Item(
-                           new Models.Product(
-                               i.Product.Name,
-                               (double) i.Product.Price),
-                               (int) i.Quantity)).ToList(),
-                (DateTime) order.Date)
-            ).AsEnumerable().Where(order => order.Location.LocationName == location.LocationName).ToList();
+            List<Order> mOrders=  _context.Orders.Select(
+                order => order
+               
+                //    new Customer(order.Customer.Name, order.Customer.Address, order.Customer.Email, order.Customer.ID),
+                //    new Location(order.Location.LocationName, order.Location.Address),
+                //    order.Items.Select(
+                //        i => new Item(
+                //            new Product(
+                //                i.Product.Name,
+                //                (double) i.Product.Price),
+                //                (int) i.Quantity)).ToList(),
+                // (DateTime) order.Date)
+            ).AsEnumerable().Where(order => order.Location.LocationID == location.LocationID).ToList();
 
-            Func<Models.Order, double> orderbyprice = order => order.Total;
-            Func<Models.Order, DateTime> orderbydate = order => order._date;
+            Func<Order, double> orderbyprice = order => order.Total;
+            Func<Order, DateTime> orderbydate = order => order.Date;
 
-            IOrderedEnumerable<StoreModels.Order> temp = null;
+            IOrderedEnumerable<Order> temp = null;
             if(price){
                 //order by total
               temp =  mOrders.OrderBy(orderbyprice);
@@ -183,30 +176,30 @@ namespace Data
         }
         
        
-        public void PlaceOrder(Models.Order mOrder)
+        public void PlaceOrder(Order mOrder)
         {  
-            List<Entity.OrderItem> items = new List<Entity.OrderItem>{};
-            mOrder.Items.ForEach(item => 
-                items.Add(
-                    new Entity.OrderItem
-                    {
-                        // OrderId = eOrder.Id,
-                        Product = GetProduct(item.Product),
-                        Quantity = item.Quantity,
-                    })
-            );         
+            // List<Item> items = new List<Item>{};
+            // mOrder.Items.ForEach(item => 
+            //     items.Add(
+            //         new Item
+            //         {
+            //             // OrderId = eOrder.Id,
+            //             Product = GetProduct(item.Product),
+            //             Quantity = item.Quantity,
+            //         })
+            // );         
             //First Create order
-            Entity.Order eOrder=  new Entity.Order
-            {
-                Customer = GetCustomer(mOrder.Customer),
-                Location = GetLocation(mOrder.Location),
-                Date = mOrder._date,
-                Total = mOrder.Total,
-                OrderItems = items
-            };
+            // Order eOrder=  new Order
+            // {
+            //     Customer = GetCustomer(mOrder.Customer),
+            //     Location = GetLocation(mOrder.Location),
+            //     Date = mOrder.Date,
+            //     Total = mOrder.Total,
+            //     OrderItems = items
+            // };
             
             try{
-            _context.Orders.Add(eOrder);
+            _context.Orders.Add(mOrder);
             //Save Order to DB so that OrderItems entries have an ID to Reverence in the db
 
             //This can probably be done with the ef-core change tracker in the future
@@ -229,31 +222,31 @@ namespace Data
             // _context.SaveChanges();
         }
         
-        private Entity.Location GetLocation(Models.Location mLocation)
+        private Location GetLocation(Location mLocation)
         {
-            Entity.Location found =  _context.Locations.FirstOrDefault( o => (o.LocationName == mLocation.LocationName) && (o.Address == mLocation.Address));
+            Location found =  _context.Locations.FirstOrDefault( o => (o.LocationID == mLocation.LocationID));
             return found;
         }
-        private Entity.Customer GetCustomer(Models.Customer mCustomer)
+        private Customer GetCustomer(Customer mCustomer)
         {
-            Entity.Customer found =  _context.Customers.FirstOrDefault( o => o.Id == mCustomer.ID);
+            Customer found =  _context.Customers.FirstOrDefault( o => o.CustomerID == mCustomer.CustomerID);
             return found;
         }
-        private Entity.Product GetProduct(Models.Product mProduct)
+        private Product GetProduct(Product mProduct)
         {
-            Entity.Product found = _context.Products.FirstOrDefault(o => (o.Name == mProduct.ProductName)&& (o.Price == mProduct.Price));
+            Product found = _context.Products.FirstOrDefault(o => (o.ProductID == mProduct.ProductID));
             return found;
         }
-        private Entity.InventoryItem GetInventoryItem(Models.Item item, Entity.Location eLocation)
+        private Item GetInventoryItem(Item item, Location eLocation)
         {
-            Entity.InventoryItem found = _context.InventoryItems.FirstOrDefault(o=> (o.Product.Name == item.Product.ProductName) && (o.LocationId == eLocation.Id));
+            Item found = _context.InventoryItems.FirstOrDefault(o=> (o.ItemID == item.ItemID));
             return found;
         }
 
-        public void UpdateInventoryItem(Models.Location location, Models.Item item)
+        public void UpdateInventoryItem(Location location, Item item)
         {
-            Entity.Location eLocation = GetLocation(location);
-            Entity.InventoryItem eItem = GetInventoryItem(item, eLocation);
+            Location eLocation = GetLocation(location);
+            Item eItem = GetInventoryItem(item, eLocation);
             eItem.Quantity = item.Quantity;
             var thing =  _context.InventoryItems.Update(eItem);            
             _context.SaveChanges();

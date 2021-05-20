@@ -10,21 +10,22 @@ namespace StoreModels
     public class Item
     {
         private int _quantity;
-        public Item(Product product, int quantity)
+        public Item(int ProductID, int quantity)
         {
-            this.Product = product;
+            this.ProductID = ProductID;
             this.Quantity = quantity;
         }
-        public Item(Product product, int quantity, int id):this(product,quantity)
+        public Item(int ProductID, int quantity, int ItemId):this(ProductID,quantity)
         {
-            this.ID = id;
+            this.ItemID = ItemId;
         }
         public override string ToString()
         {
-            return String.Format("{0} Quantity: {1}",Product.ToString(), Quantity);
+            return String.Format("{0} Quantity: {1}",ProductID, Quantity);
         }
+        public int ProductID { get; set; }
         public Product Product { get; set; }
-        public int ID { get; set; }
+        public int ItemID { get; set; }
 
         public int Quantity 
         { 

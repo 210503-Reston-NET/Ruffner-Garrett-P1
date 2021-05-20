@@ -388,7 +388,7 @@ namespace UI
                 try{
                     do{
                         Console.Clear();
-                        List<Object> objectList = loc.Inventory.Cast<Object>().ToList<Object>();
+                        List<Object> objectList = loc.InventoryItems.Cast<Object>().ToList<Object>();
                         
                         Object ret = SelectFromList.Start(objectList);
                         Item itm = (Item) ret;

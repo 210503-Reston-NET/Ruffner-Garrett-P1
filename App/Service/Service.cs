@@ -26,7 +26,7 @@ namespace Service
              Customer newCustomer = null;
             try{
                 cEmail = new MailAddress(email);
-                newCustomer = new Customer(name, address, cEmail);
+                newCustomer = new Customer(name, address, email);
             }catch(Exception ex){
                 Log.Error("Could not create new customer, {0}\n{1}",ex.Message, ex.StackTrace);
             }
@@ -71,7 +71,7 @@ namespace Service
             if(CheckForProduct(newProduct, _repo.GetAllProducts()))
             {
                 //customer already exists
-                Log.Debug("Product {0} Already exists",newProduct.ProductName);
+                Log.Debug("Product {0} Already exists",newProduct.Name);
                 throw new Exception("Product Already Exits");
             }
             try{
@@ -86,24 +86,24 @@ namespace Service
         {
            
             //Create new Item for inventory
-            Item newItem = new Item(product, stock);
-            //check inventory for product
-            foreach (Item item in location.Inventory)
-            {
-                if(newItem.Product.ProductName == item.Product.ProductName)
-                {
-                    throw new Exception("Product is Already in Inventory");
-                }
-            }
-            //Product is not in inventory
-            //Add Item to Inventory
-            try{
-                location.Inventory.Add(newItem);
-                _repo.AddProductToInventory(location, newItem);
-            }catch(Exception ex){
-                Log.Error("Failed to Add Product To Inventory {0} \n{1}",ex.Message, ex.StackTrace);
-                throw new Exception("Failed to Add product to Inventory");
-            }
+            // Item newItem = new Item(product, stock);
+            // //check inventory for product
+            // foreach (Item item in location.InventoryItems)
+            // {
+            //     if(newItem.Product.Name == item.Product.Name)
+            //     {
+            //         throw new Exception("Product is Already in Inventory");
+            //     }
+            // }
+            // //Product is not in inventory
+            // //Add Item to Inventory
+            // try{
+            //     location.InventoryItems.Add(newItem);
+            //     _repo.AddProductToInventory(location, newItem);
+            // }catch(Exception ex){
+            //     Log.Error("Failed to Add Product To Inventory {0} \n{1}",ex.Message, ex.StackTrace);
+            //     throw new Exception("Failed to Add product to Inventory");
+            // }
         }
 
         public List<Customer> GetAllCustomers()
@@ -168,10 +168,10 @@ namespace Service
         private void SellItems(Location location, Item oItem)
         {
             //get item from inventory then reduce quantity by specified amount
-            List<Item> sItems = location.Inventory;
-            Item lItem = sItems.Find(i => i.Product == oItem.Product);
-            lItem.ChangeQuantity(-oItem.Quantity); 
-            _repo.UpdateInventoryItem(location, lItem);
+            // List<Item> sItems = location.InventoryItems;
+            // Item lItem = sItems.Find(i => i.Product == oItem.Product);
+            // lItem.ChangeQuantity(-oItem.Quantity); 
+            // _repo.UpdateInventoryItem(location, lItem);
         }
 
         public Customer SearchCustomers(string name)
@@ -194,7 +194,7 @@ namespace Service
 
         public void updateItemInStock(Location location, Item item, int amount)
         {   
-            Log.Debug("Updating stock of {0} at {1} Qunatity:{2}",item.Product.ProductName,location.LocationName, amount);
+            //Log.Debug("Updating stock of {0} at {1} Qunatity:{2}",item.Product.Name,location.LocationName, amount);
             item.ChangeQuantity(amount);
             try{
                 _repo.UpdateInventoryItem(location, item);
@@ -234,7 +234,7 @@ namespace Service
         {
             foreach (Product item in products)
             {
-                if(item.ProductName == product.ProductName)
+                if(item.Name == product.Name)
                 {
                     return true;
                 }
@@ -244,12 +244,13 @@ namespace Service
 
         public double CalculateOrderTotal(List<Item> items)
         {
-            double total = 0;
-            foreach(Item item in items)
-            {
-               total += item.Product.Price * item.Quantity;
-            }
-            return total;
+            // double total = 0;
+            // foreach(Item item in items)
+            // {
+            //    total += item.Product.Price * item.Quantity;
+            // }
+            // return total;
+            return 10;
         }
     }
 }

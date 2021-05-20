@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Data;
 
 namespace WebUI
 {
@@ -24,8 +27,20 @@ namespace WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<StoreDBContext>(options =>options.UseNpgsql(parseElephantSQLURL(this.Configuration.GetConnectionString("StoreDB"))));
         }
-
+        public static string parseElephantSQLURL(string uriString)
+        {
+            //var uriString = connectionString; //ConfigurationManager.AppSettings["ELEPHANTSQL_URL"] ?? 'postgres://localhost/mydb;
+            var uri = new Uri(uriString);
+            var db = uri.AbsolutePath.Trim('/');
+            var user = uri.UserInfo.Split(':')[0];
+            var passwd = uri.UserInfo.Split(':')[1];
+            var port = uri.Port > 0 ? uri.Port : 5432;
+            var connStr = string.Format("Server={0};Database={1};User Id={2};Password={3};Port={4}",
+                uri.Host, db, user, passwd, port);
+            return connStr;
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

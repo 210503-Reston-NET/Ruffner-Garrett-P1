@@ -5,30 +5,30 @@ namespace StoreModels
     public class Product
     {
         private double _price;
-        private string _productName;
-        public Product(string productName, double price)
+        private string _name;
+        public Product(string name, double price)
         {
-            this.ProductName = productName;
+            this.Name = name;
             this.Price = price;
         }
-        public Product(string productName, double price, int id) : this(productName, price)
+        public Product(string name, double price, int id) : this(name, price)
         {
-            this.ID = id;
+            this.ProductID = id;
         }
         public override string ToString()
         {
-            return String.Format("{0}, ${1}",this.ProductName, this.Price);
+            return String.Format("{0}, ${1}",this.Name, this.Price);
         }
 
-        public int ID { get; set; }
-        public string ProductName 
+        public int ProductID { get; set; }
+        public string Name 
         { 
-            get => _productName; 
+            get => _name; 
             set{
                 if(String.IsNullOrWhiteSpace(value)){
                     throw new Exception("Given bad value for Product Name");
                 }else{
-                    _productName= value;
+                    _name= value;
                 }
             }
         }

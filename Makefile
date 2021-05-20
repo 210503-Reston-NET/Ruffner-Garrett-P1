@@ -4,7 +4,7 @@
 solution_root = App
 
 #solution_main is the directory containing the project with a main method. Relative to solution_root.
-solution_main = UI
+solution_main = WebUI
 
 #log_dir is the name of directory with logs relative to solution_root
 log_dir = logs

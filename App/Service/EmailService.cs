@@ -30,18 +30,18 @@ namespace Service
         }
         public void SendWelcomeEmail(Customer customer)
         {
-            Log.Debug("Sending Welcome Email to: {0}",customer.Email.Address);
+            Log.Debug("Sending Welcome Email to: {0}",customer.Email);
             string subject = String.Format("Hello {0}, Welcome to watch shop!", customer.Name);
-            string body = String.Format("We have the following info.\nName: {0} \nAddress: {1} \nEmail: {2}", customer.Name, customer.Address, customer.Email.Address);
-            MailMessage mm = new MailMessage(originEmail.Address, customer.Email.Address, subject, body);
+            string body = String.Format("We have the following info.\nName: {0} \nAddress: {1} \nEmail: {2}", customer.Name, customer.Address, customer.Email);
+            MailMessage mm = new MailMessage(originEmail.Address, customer.Email, subject, body);
             _smtp.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-            string userState = customer.Email.Address;
+            string userState = customer.Email;
             _smtp.SendAsync(mm, userState);
             // _smtp.Send(mm);
         }
         public void SendOrderConfirmationEmail(Customer customer, Order order)
         {   
-            Log.Debug("Sending Order Confirmation Email to: {0}",customer.Email.Address);
+            Log.Debug("Sending Order Confirmation Email to: {0}",customer.Email);
             MailAddress from = new MailAddress("ddaydevtime@gmail.com");
             string subject = String.Format("Thank you for your order from The Watch Shop!", customer.Name);
             StringBuilder sb = new StringBuilder("", 500);
@@ -49,15 +49,15 @@ namespace Service
             sb.AppendFormat("Order from: {0}\n{1}\n",order.Location.LocationName,order.Location.Address);
             sb.AppendFormat("Shipping Address: {0}\n",customer.Address);
             sb.AppendFormat("Order Items:\n\n");
-            foreach (Item item in order.Items)
-            {
-                sb.AppendFormat("{0} x {1}\n",item.Product, item.Quantity);
-            }
+            // foreach (Item item in order.Items)
+            // {
+            //     sb.AppendFormat("{0} x {1}\n",item.Product, item.Quantity);
+            // }
             sb.AppendFormat("\nOrder Total: ${0}\n",order.Total);
             string body = sb.ToString();
-            MailMessage mm = new MailMessage(from.Address, customer.Email.Address, subject, body);
+            MailMessage mm = new MailMessage(from.Address, customer.Email, subject, body);
             _smtp.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-            string userState = customer.Email.Address;
+            string userState = customer.Email;
             _smtp.SendAsync(mm, userState);
         }
     }

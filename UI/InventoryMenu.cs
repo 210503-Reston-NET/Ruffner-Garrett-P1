@@ -64,7 +64,7 @@ namespace UI
                         // View Inventory Of Location
                         try{
                             Console.WriteLine("{0} Inventory:", _location.ToString());
-                            foreach (Item item in _location.Inventory)
+                            foreach (Item item in _location.InventoryItems)
                             {
                                 Console.WriteLine(item.ToString());
                             }
@@ -80,7 +80,7 @@ namespace UI
                         //Get Product from inventory
                         Item selectedItem;
                         try{ 
-                            List<Object> objectList = _location.Inventory.Cast<Object>().ToList<Object>();
+                            List<Object> objectList = _location.InventoryItems.Cast<Object>().ToList<Object>();
                             
                             Object ret = SelectFromList.Start(objectList);
                             selectedItem = (Item) ret;
