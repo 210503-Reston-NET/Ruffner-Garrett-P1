@@ -14,6 +14,7 @@ using Data;
 using Service;
 using System.Net.Mail;
 using System.Net;
+using Serilog;
 
 namespace WebUI
 {
@@ -38,11 +39,9 @@ namespace WebUI
             services.AddControllersWithViews();
             services.AddDbContext<StoreDBContext>(options =>options.UseNpgsql(parseElephantSQLURL(this.Configuration.GetConnectionString("StoreDB"))));
             services.AddScoped<IRepository, RepoDB>();
-            //services.AddScoped<IEmailService, EmailService>(options => options.);
             services.AddSingleton<IEmailService>( new EmailService(smtpClient));
             services.AddScoped<IServices, Services>();
-            
-            
+            Log.Debug("Services Configured");
         }
         public static string parseElephantSQLURL(string uriString)
         {
@@ -69,6 +68,18 @@ namespace WebUI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            // var builder = new ConfigurationBuilder()
+            // .SetBasePath(env.ContentRootPath)
+            // .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            // .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            // .AddEnvironmentVariables();
+            // this.Configuration = builder.Build();
+
+            Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(Configuration)
+            .CreateLogger();
+
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

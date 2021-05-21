@@ -108,6 +108,7 @@ namespace Service
 
         public List<Customer> GetAllCustomers()
         {
+            Log.Verbose("Retrieveing all Customers From DB");
             List<Customer> retVal;
             retVal = _repo.GetAllCustomers();
             return retVal;
