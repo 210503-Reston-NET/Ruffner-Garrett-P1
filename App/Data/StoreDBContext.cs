@@ -1,16 +1,15 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using StoreModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System;
 
 namespace Data
 {
-    public class StoreDBContext : DbContext
+    public class StoreDBContext : IdentityDbContext<ApplicationUser, ApplicationRole , Guid>
     {
-        public StoreDBContext() :base()
-        {
-
-        }
-
-        public StoreDBContext(DbContextOptions options) :base(options)
+        public StoreDBContext(DbContextOptions<StoreDBContext> options) :base(options)
         {
 
         }
@@ -23,13 +22,19 @@ namespace Data
         
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<ApplicationUser> Users {get; set;}
+
+        // public DbSet<ApplicationUser> Users { get; set;0}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Customer>().Property(obj => obj.CustomerID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Location>().Property(obj => obj.LocationID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Order>().Property(obj => obj.OrderID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Item>().Property(obj => obj.ItemID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Product>().Property(obj => obj.ProductID).ValueGeneratedOnAdd();
+           
         }
 
     }

@@ -1,3 +1,4 @@
+using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ using Service;
 using System.Net.Mail;
 using System.Net;
 using Serilog;
+using WebUI.Models;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using StoreModels;
 
 namespace WebUI
 {
@@ -36,16 +42,32 @@ namespace WebUI
                 Credentials = new NetworkCredential(Configuration["Smtp:Username"], Configuration["Smtp:Password"]),
                 EnableSsl = true,
             };
-            services.AddControllersWithViews();
             services.AddDbContext<StoreDBContext>(options =>options.UseNpgsql(parseElephantSQLURL(this.Configuration.GetConnectionString("StoreDB"))));
+            services.AddControllersWithViews();
+            services.AddRazorPages();
             services.AddScoped<IRepository, RepoDB>();
             services.AddSingleton<IEmailService>( new EmailService(smtpClient));
             services.AddScoped<IServices, Services>();
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<StoreDBContext>()
+            .AddDefaultUI()
+            .AddDefaultTokenProviders();
+            // services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<StoreDBContext>().AddDefaultTokenProviders();
+            // services.AddIdentity<ApplicationUser, UserRole>(cfg => {
+            //     cfg.User.RequireUniqueEmail = true;
+            // }).AddEntityFrameworkStores<StoreDBContext>();
+
+            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddSessionStateTempDataProvider();
+            // services.Configure<RazorViewEngineOptions>(o =>
+            // {
+            //     o.AreaViewLocationFormats.Add("/Areas/{2}/{0}" + RazorViewEngine.ViewExtension);
+            // });
+            
+
             Log.Debug("Services Configured");
         }
         public static string parseElephantSQLURL(string uriString)
         {
-            //var uriString = connectionString; //ConfigurationManager.AppSettings["ELEPHANTSQL_URL"] ?? 'postgres://localhost/mydb;
             var uri = new Uri(uriString);
             var db = uri.AbsolutePath.Trim('/');
             var user = uri.UserInfo.Split(':')[0];
@@ -85,13 +107,19 @@ namespace WebUI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                
+                //  endpoints.MapControllerRoute(
+                //     name: "MyArea",
+                //     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapRazorPages();
             });
         }
     }
