@@ -15,29 +15,29 @@ namespace WebUI.Controllers
 
         public ActionResult Index()
         {
-          return View(_service.GetAllCustomers().Select(c => new CustomerVM(c)).ToList());
+          return View(_service.GetAllCustomers().AsEnumerable());
         }
-        public IActionResult Create()
-        {
-          return View();
-        }
+        // public IActionResult Create()
+        // {
+        //   return View();
+        // }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(CustomerVM c)
-        {
-          try
-          {
-            if(ModelState.IsValid)
-            {
-              _service.AddCustomer(c.Name,c.Address,c.Email);
-              return RedirectToAction(nameof(Index));
-            }
-            return View();
-          }catch{
-            return View();
-          }
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public IActionResult Create(CustomerVM c)
+        // {
+        //   try
+        //   {
+        //     if(ModelState.IsValid)
+        //     {
+        //       _service.AddCustomer(c.Name,c.Address,c.Email);
+        //       return RedirectToAction(nameof(Index));
+        //     }
+        //     return View();
+        //   }catch{
+        //     return View();
+        //   }
           
-        }
+        // }
     }
 }

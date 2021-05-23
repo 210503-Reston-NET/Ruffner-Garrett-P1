@@ -1,4 +1,4 @@
-@model IEnumerable<WebUI.Models.CustomerVM>
+@model IEnumerable<StoreModels.ApplicationUser>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,9 +12,9 @@
     <title>Customers</title>
 </head>
 <body>
-<p>
+@* <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p> *@
 <table class="table">
     <thead>
         <tr>
@@ -49,9 +49,10 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @* asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" *@
+                @* @Html.ActionLink("Details", "Manage", "Account", new {Area = "Identity"}, new{} ) *@
+                @* @Html.ActionLink("Details", "Details", new { id = item.Id }) | *@
+                @* @Html.ActionLink("Delete", "Delete", new { id = item.Id }) *@
             </td>
         </tr>
 }

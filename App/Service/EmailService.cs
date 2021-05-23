@@ -4,6 +4,8 @@ using System.Net.Mail;
 using StoreModels;
 using Serilog;
 using System.Text;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Threading.Tasks;
 
 namespace Service
 {
@@ -28,7 +30,7 @@ namespace Service
                 Log.Information("Message to {0} sent successfully.", token);
             }
         }
-        public void SendWelcomeEmail(Customer customer)
+        public void SendWelcomeEmail(ApplicationUser customer)
         {
             Log.Debug("Sending Welcome Email to: {0}",customer.Email);
             string subject = String.Format("Hello {0}, Welcome to watch shop!", customer.Name);
@@ -39,7 +41,7 @@ namespace Service
             _smtp.SendAsync(mm, userState);
             // _smtp.Send(mm);
         }
-        public void SendOrderConfirmationEmail(Customer customer, Order order)
+        public void SendOrderConfirmationEmail(ApplicationUser customer, Order order)
         {   
             Log.Debug("Sending Order Confirmation Email to: {0}",customer.Email);
             MailAddress from = new MailAddress("ddaydevtime@gmail.com");
@@ -59,6 +61,6 @@ namespace Service
             _smtp.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
             string userState = customer.Email;
             _smtp.SendAsync(mm, userState);
-        }
+        }           
     }
 }

@@ -16,14 +16,14 @@ namespace Data
             _context = context;
         }
         private IDbContextTransaction _transaction;
-        public void AddCustomer(Customer customer)
-        {
-            _context.Customers.Add(
-                customer
-            );
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-        }
+        // public void AddCustomer(Customer customer)
+        // {
+        //     _context.Customers.Add(
+        //         customer
+        //     );
+        //     _context.SaveChanges();
+        //     _context.ChangeTracker.Clear();
+        // }
 
         public void AddLocation(Location location)
         {
@@ -65,11 +65,13 @@ namespace Data
            _context.ChangeTracker.Clear();
         }
 
-        public List<Customer> GetAllCustomers()
+        public List<ApplicationUser> GetAllCustomers()
         {
-            return _context.Customers.Select(
-                customer => new Customer(customer.Name, customer.Address, customer.Email, customer.CustomerID)
-            ).ToList();
+
+            return _context.Users.Select(user => user).ToList();
+            // return _context.AspNetUsers.Select(
+            //     // customer => new ApplicationUser(customer.Name, customer.Address, customer.Email, customer.CustomerID)
+            // ).ToList();
         }
 
         public List<Location> GetAllLocations()
@@ -99,7 +101,7 @@ namespace Data
             ).ToList();
         }
 
-        public List<Order> GetOrders(Customer customer, bool price, bool asc)
+        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc)
         {
             //OH GOD ITS SO GROSS
             //SOMEONE HELP ME FIND A BETTER WAY
@@ -115,7 +117,7 @@ namespace Data
                 //                (double) i.Product.Price),
                 //                (int) i.Quantity)).ToList(),
                 // (DateTime) order.Date)
-            ).AsEnumerable().Where(order => order.Customer.CustomerID == customer.CustomerID).ToList();
+            ).AsEnumerable().Where(order => order.Customer.Id == customer.Id).ToList();
 
             Func<Order, double> orderbyprice = order => order.Total;
             Func<Order, DateTime> orderbydate = order => order.Date;
@@ -227,9 +229,9 @@ namespace Data
             Location found =  _context.Locations.FirstOrDefault( o => (o.LocationID == mLocation.LocationID));
             return found;
         }
-        private Customer GetCustomer(Customer mCustomer)
+        private ApplicationUser GetCustomer(ApplicationUser mCustomer)
         {
-            Customer found =  _context.Customers.FirstOrDefault( o => o.CustomerID == mCustomer.CustomerID);
+            ApplicationUser found =  _context.Users.FirstOrDefault( o => o.Id == mCustomer.Id);
             return found;
         }
         private Product GetProduct(Product mProduct)

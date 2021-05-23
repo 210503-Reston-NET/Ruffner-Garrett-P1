@@ -4,11 +4,11 @@ namespace Data
 {
     public interface IRepository
     {
-        /// <summary>
-        /// Add new Customer to Repo
-        /// </summary>
-        /// <param name="customer"></param>
-        public void AddCustomer(Customer customer);
+        // /// <summary>
+        // /// Add new Customer to Repo
+        // /// </summary>
+        // /// <param name="customer"></param>
+        // public void AddCustomer(Customer customer);
         /// <summary>
         /// Add new Location to Repo
         /// </summary>
@@ -23,7 +23,7 @@ namespace Data
         /// Returns List Containing all Customers
         /// </summary>
         /// <returns></returns>
-        public List<Customer> GetAllCustomers();
+        public List<ApplicationUser> GetAllCustomers();
         /// <summary>
         /// Returns List Containing all Locations
         /// </summary>
@@ -46,7 +46,7 @@ namespace Data
         /// <param name="price">If True => Sorted by price; False => Sorted by Date</param>
         /// <param name="asc">True => Ascending Order; False => Descending</param>
         /// <returns></returns>
-        public List<Order> GetOrders(Customer customer, bool price, bool asc);
+        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc);
                 /// <summary>
         /// Gets Orders by Location
         /// </summary>

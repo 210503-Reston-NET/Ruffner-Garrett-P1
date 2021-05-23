@@ -4,7 +4,7 @@ namespace Service
 {
     public interface IEmailService
     {
-        void SendWelcomeEmail(Customer customer);
-        void SendOrderConfirmationEmail(Customer customer, Order order);
+        void SendWelcomeEmail(ApplicationUser customer);
+        void SendOrderConfirmationEmail(ApplicationUser customer, Order order);
     }
 }
