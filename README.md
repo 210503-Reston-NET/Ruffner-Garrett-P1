@@ -5,8 +5,8 @@
 The store app is a software that helps customers purchase products from your business. Designed with functionality that would make virtual shopping much simpler!
 
 ## Functionality:
- - [ ] Add a new customer
- - [ ] Sarch customers by name
+ - [x] Add a new customer
+ - [ ] Search customers by name
  - [ ] Display details of an order
  - [ ] Place orders to store locations for customers
  - [ ] View order history of customer
