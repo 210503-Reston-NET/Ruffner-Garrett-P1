@@ -4,18 +4,18 @@ namespace Service
 {
     public interface IServices
     {
-        /// <summary>
-        /// Create a new Customer and add it to the repository
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="address"></param>
-        /// <param name="email"></param>
-        public void AddCustomer(string name, string address, string email);
+        // /// <summary>
+        // /// Create a new Customer and add it to the repository
+        // /// </summary>
+        // /// <param name="name"></param>
+        // /// <param name="address"></param>
+        // /// <param name="email"></param>
+        // public void AddCustomer(string name, string address, string email);
         /// <summary>
         /// Get Customers From Repo
         /// </summary>
         /// <returns></returns>
-        public List<Customer> GetAllCustomers();
+        public List<ApplicationUser> GetAllCustomers();
         /// <summary>
         /// Get Locations From Repo
         /// </summary>
@@ -50,8 +50,8 @@ namespace Service
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Customer SearchCustomers(string name);
-        public List<Order> GetOrders(Customer customer, bool price, bool asc);
+        public ApplicationUser SearchCustomers(string name);
+        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc);
         public List<Order> GetOrders(Location location, bool price, bool asc);
         /// <summary>
         /// Place an order for a customer/locaiton combination
@@ -60,7 +60,7 @@ namespace Service
         /// <param name="location"></param>
         /// <param name="customer"></param>
         /// <param name="items"></param>
-        public void PlaceOrder(Location location, Customer customer, List<Item> items);
+        public void PlaceOrder(Location location, ApplicationUser customer, List<Item> items);
         public void updateItemInStock(Location location, Item item, int amount);
         /// <summary>
         /// Calculates Total cost from a list of Items

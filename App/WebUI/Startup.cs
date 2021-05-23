@@ -52,6 +52,12 @@ namespace WebUI
             .AddEntityFrameworkStores<StoreDBContext>()
             .AddDefaultUI()
             .AddDefaultTokenProviders();
+            services.Configure<IdentityOptions>(opts => 
+                {
+                    opts.User.RequireUniqueEmail = false;
+                    opts.SignIn.RequireConfirmedAccount = false;
+                }
+            );
             // services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<StoreDBContext>().AddDefaultTokenProviders();
             // services.AddIdentity<ApplicationUser, UserRole>(cfg => {
             //     cfg.User.RequireUniqueEmail = true;

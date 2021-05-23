@@ -14,7 +14,7 @@ namespace Data
 
         }
 
-        public DbSet<Customer> Customers { get; set; }
+        // public DbSet<Customer> Customers { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Item> OrderItems { get; set; }
@@ -22,14 +22,14 @@ namespace Data
         
         public DbSet<Product> Products { get; set; }
 
-        public DbSet<ApplicationUser> Users {get; set;}
+        // public DbSet<ApplicationUser> Users {get; set;}
 
         // public DbSet<ApplicationUser> Users { get; set;0}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Customer>().Property(obj => obj.CustomerID).ValueGeneratedOnAdd();
+            // modelBuilder.Entity<Customer>().Property(obj => obj.CustomerID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Location>().Property(obj => obj.LocationID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Order>().Property(obj => obj.OrderID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Item>().Property(obj => obj.ItemID).ValueGeneratedOnAdd();

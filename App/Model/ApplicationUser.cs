@@ -5,6 +5,10 @@ namespace StoreModels
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
+        [PersonalData]
+        public string Name {get; set;}
+        [PersonalData]
+        public string Address {get; set;}
         public string CustomTag { get; set; }
     }
 }

@@ -19,33 +19,33 @@ namespace Service
             _emailService = emailService;
         }
 
-        public void AddCustomer(string name, string address, string email)
-        {   
-            Log.Debug("Adding new customer: {0}, {1}, {2}", name, address, email);
-             MailAddress cEmail = new MailAddress(email);
-             Customer newCustomer = new Customer(name,address, email);
-            try{
-                cEmail = new MailAddress(email);
-                newCustomer = new Customer(name, address, email);
-            }catch(Exception ex){
-                Log.Error("Could not create new customer, {0}\n{1}",ex.Message, ex.StackTrace);
-            }
+        // public void AddCustomer(string name, string address, string email)
+        // {   
+        //     Log.Debug("Adding new customer: {0}, {1}, {2}", name, address, email);
+        //      MailAddress cEmail = new MailAddress(email);
+        //      Customer newCustomer = new Customer(name,address, email);
+        //     try{
+        //         cEmail = new MailAddress(email);
+        //         newCustomer = new Customer(name, address, email);
+        //     }catch(Exception ex){
+        //         Log.Error("Could not create new customer, {0}\n{1}",ex.Message, ex.StackTrace);
+        //     }
 
-            if(CheckForCustomer(newCustomer, _repo.GetAllCustomers()))
-            {
-                //customer already exists
-                Log.Debug("Customer {0} Already exists",newCustomer.Name);
-                throw new Exception("Customer Already Exits");
-            }
-            try{
-                _repo.AddCustomer(newCustomer);
-                _emailService.SendWelcomeEmail(newCustomer);
-            }catch(Exception ex){
+        //     if(CheckForCustomer(newCustomer, _repo.GetAllCustomers()))
+        //     {
+        //         //customer already exists
+        //         Log.Debug("Customer {0} Already exists",newCustomer.Name);
+        //         throw new Exception("Customer Already Exits");
+        //     }
+        //     try{
+        //         _repo.AddCustomer(newCustomer);
+        //         _emailService.SendWelcomeEmail(newCustomer);
+        //     }catch(Exception ex){
 
-                Log.Error("Failed to Add Customer. {0}\n{1}",ex.Message, ex.StackTrace);
-                throw new Exception("Failed to Add Customer");
-            }
-        }
+        //         Log.Error("Failed to Add Customer. {0}\n{1}",ex.Message, ex.StackTrace);
+        //         throw new Exception("Failed to Add Customer");
+        //     }
+        // }
         
 
         public void AddLocation(string name, string address)
@@ -106,10 +106,10 @@ namespace Service
             }
         }
 
-        public List<Customer> GetAllCustomers()
+        public List<ApplicationUser> GetAllCustomers()
         {
             Log.Verbose("Retrieveing all Customers From DB");
-            List<Customer> retVal;
+            List<ApplicationUser> retVal;
             retVal = _repo.GetAllCustomers();
             return retVal;
         }
@@ -120,7 +120,7 @@ namespace Service
             return retVal;
         }
 
-        public List<Order> GetOrders(Customer customer, bool price, bool asc)
+        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc)
         {
            return _repo.GetOrders(customer, price, asc);
         }
@@ -135,7 +135,7 @@ namespace Service
            return _repo.GetAllProducts();
         }
 
-        public void PlaceOrder(Location location, Customer customer, List<Item> items)
+        public void PlaceOrder(Location location, ApplicationUser customer, List<Item> items)
         {
             Order order = new Order(customer, location, items);
             //make sure that location has stock then decrease stock
@@ -175,12 +175,12 @@ namespace Service
             // _repo.UpdateInventoryItem(location, lItem);
         }
 
-        public Customer SearchCustomers(string name)
+        public ApplicationUser SearchCustomers(string name)
         {
             Log.Verbose("Searching for Customer: {0}",name);         
-            List<Customer> customers = GetAllCustomers();
+            List<ApplicationUser> customers = GetAllCustomers();
             
-            foreach (Customer item in customers)
+            foreach (ApplicationUser item in customers)
             {
                 if(name == item.Name)
                 {
