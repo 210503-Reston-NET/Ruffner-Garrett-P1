@@ -1,4 +1,4 @@
-.PHONY: build run clean test
+.PHONY: build run clean test clearlogs
 
 #solution_root is the directory containing the root .sln file
 solution_root = App
