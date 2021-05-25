@@ -76,7 +76,7 @@ namespace WebUI
           Log.Verbose("ID from action: {0}", Id);
           List<Item> items = _service.getInventory(Id);
           List<ItemVM> newItems = new List<ItemVM>();
-          items.ForEach(item => newItems.Add(new ItemVM(item)));
+          items.ForEach(item => newItems.Add(new ItemVM(item, Id)));
           return View(newItems);
         }
 
