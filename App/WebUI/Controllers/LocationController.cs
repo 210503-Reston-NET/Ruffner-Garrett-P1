@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Principal;
 using StoreModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace WebUI
 {
@@ -19,13 +20,15 @@ namespace WebUI
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private IAuthorizationService _AuthorizationService;
    
         private IServices _service;
-        public LocationController(IServices service, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public LocationController(IServices service, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IAuthorizationService AuthorizationService)
         {
           this._service = service;
           this._userManager = userManager;
           this._signInManager = signInManager;
+          this._AuthorizationService = AuthorizationService;
         }
         
         [AllowAnonymous]
@@ -77,10 +80,25 @@ namespace WebUI
           return View(newItems);
         }
 
-        [Authorize]
-        public ActionResult Admin(int id)
+        [Authorize()]
+        
+        
+        public async Task<ActionResult> Admin(int Id)
         {
-          return View();
+          var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == Id).FirstOrDefault();
+          if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
+          {
+            List<Item> items = item.InventoryItems;
+            List<ItemVM> newItems = new List<ItemVM>();
+            items.ForEach(item => newItems.Add(new ItemVM(item)));
+            return View(newItems);
+          }  
+
+          return RedirectToAction(nameof(Index));
+          //if(await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))){
+
+          
+          
         }
     }
 }
