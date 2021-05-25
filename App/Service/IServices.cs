@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using StoreModels;
 namespace Service
@@ -44,7 +45,7 @@ namespace Service
         /// </summary>
         /// <param name="name"></param>
         /// <param name="address"></param>
-        public void AddLocation(string name, string address);
+        public Location AddLocation(string name, string address, Guid managerId);
         /// <summary>
         /// Search for a customer by name
         /// </summary>
@@ -69,6 +70,8 @@ namespace Service
         /// <param name="items"></param>
         /// <returns></returns>
         public double CalculateOrderTotal(List<Item> items);
+
+        public List<Item> getInventory(int LocationId);
 
     }
 }

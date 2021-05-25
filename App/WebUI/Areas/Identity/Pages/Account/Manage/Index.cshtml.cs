@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -99,7 +100,9 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
                 }
             }
             if (Input.Name != user.Name){
+                await _userManager.RemoveClaimAsync(user, new Claim("Name", user.Name));
                 user.Name = Input.Name;
+                await _userManager.AddClaimAsync(user,new Claim("Name", user.Name));
             }
             if(Input.Address != user.Address){
                 user.Address = Input.Address;

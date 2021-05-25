@@ -27,11 +27,15 @@ namespace Data
 
         public void AddLocation(Location location)
         {
+            Log.Debug("Location Id before db add: {0}", location.LocationID);
             _context.Locations.Add(
                 location
             );
            _context.SaveChanges();
-           _context.ChangeTracker.Clear();
+           
+           _context.Entry(location).GetDatabaseValues();
+            Log.Debug("Location Id after db add: {0}", location.LocationID);
+        //    _context.ChangeTracker.Clear();
         }
 
         public void AddProduct(Product product)
@@ -77,7 +81,7 @@ namespace Data
         public List<Location> GetAllLocations()
         {
             //WHAT HAVE I CREATED
-            return _context.Locations.Select(location => location).ToList();
+            return _context.Locations.Select(location => location).ToList();//new Location(location.LocationName,location.Address, location.UserId, location.InventoryItems, location.LocationID)).ToList();
             //     location => new Location(
             //         location.LocationName, 
             //         location.Address, 
@@ -269,6 +273,13 @@ namespace Data
                 _transaction.Rollback();
                 Log.Error("Transaction Failed. Rolled back.");
             }
+        }
+
+        public Location GetLocationById(int LocationID)
+        {
+            Log.Verbose("Location ID {0}", LocationID);
+            Location found =  _context.Locations.FirstOrDefault( o => (o.LocationID == LocationID));
+            return found;
         }
     }
 }

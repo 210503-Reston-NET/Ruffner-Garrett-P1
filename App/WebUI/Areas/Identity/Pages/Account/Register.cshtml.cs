@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using WebUI.Models;
 using StoreModels;
+using System.Security.Claims;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -87,6 +88,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             {
                 var user = new ApplicationUser { UserName = Input.Email, Name = Input.Name, Address = Input.Address, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                //await _userManager.AddToRoleAsync(user, );
+                await _userManager.AddClaimAsync(user,new Claim("Name", user.Name));
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

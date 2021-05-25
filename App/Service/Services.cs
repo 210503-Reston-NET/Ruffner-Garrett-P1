@@ -48,9 +48,9 @@ namespace Service
         // }
         
 
-        public void AddLocation(string name, string address)
+        public Location AddLocation(string name, string address, Guid ManagerId)
         {
-            Location newLocation = new Location(name, address);
+            Location newLocation = new Location(name, address, ManagerId);
             if(CheckForLocations(newLocation, _repo.GetAllLocations()))
             {
                 //customer already exists
@@ -62,7 +62,9 @@ namespace Service
             }catch(Exception ex){
                 Log.Error("Failed to Add Location. {0}",ex.Message);
                 throw new Exception("Failed to Add Location");
+              
             }
+            return newLocation;
         }
 
         public void AddProduct(string productName, double productPrice)
@@ -252,6 +254,12 @@ namespace Service
             // }
             // return total;
             return 10;
+        }
+
+        public List<Item> getInventory(int LocationID)
+        {
+           Location l =  _repo.GetLocationById(LocationID);
+           return l.InventoryItems;
         }
     }
 }

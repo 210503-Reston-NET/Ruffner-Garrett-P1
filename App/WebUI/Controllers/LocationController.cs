@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,38 +7,57 @@ using Microsoft.AspNetCore.Mvc;
 using Service;
 using WebUI.Models;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Principal;
+using StoreModels;
+using System.Security.Claims;
 
 namespace WebUI
 {
     public class LocationController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+   
         private IServices _service;
-        public LocationController(IServices service)
+        public LocationController(IServices service, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
           this._service = service;
+          this._userManager = userManager;
+          this._signInManager = signInManager;
         }
-
+        
+        [AllowAnonymous]
         public ActionResult Index()
         {
-          return View(_service.GetAllLocations().Select(
-            Location => new LocationVM(Location))
-            .ToList()
-            );
+          return View(_service.GetAllLocations().AsEnumerable());
         }
 
+        [Authorize]
         public ActionResult Create()
         {
           return View();
         }
+
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(LocationVM c)
+        public async Task<IActionResult> Create(Location c)
         {
           try
           {
             if(ModelState.IsValid)
             {
-              _service.AddLocation(c.LocationName, c.Address);
+              Guid OwnerId = Guid.Parse(_userManager.GetUserId(User));
+              c = _service.AddLocation(c.LocationName, c.Address, OwnerId);
+              ApplicationUser u = await _userManager.GetUserAsync(User);
+              
+
+              await _userManager.AddClaimAsync(u,new Claim("Owner", c.LocationID.ToString()));
+              //Need to relog user to refresh admin option
+              await _signInManager.RefreshSignInAsync(u);
+
               return RedirectToAction(nameof(Index));
             }
             Log.Error("Model state invalid For LocationCreation ");
@@ -46,6 +66,21 @@ namespace WebUI
             return View();
           }
           
+        }
+        [AllowAnonymous]
+        public ActionResult Shop(int Id)
+        {
+          Log.Verbose("ID from action: {0}", Id);
+          List<Item> items = _service.getInventory(Id);
+          List<ItemVM> newItems = new List<ItemVM>();
+          items.ForEach(item => newItems.Add(new ItemVM(item)));
+          return View(newItems);
+        }
+
+        [Authorize]
+        public ActionResult Admin(int id)
+        {
+          return View();
         }
     }
 }

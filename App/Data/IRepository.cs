@@ -76,5 +76,7 @@ namespace Data
         /// </summary>
         /// <param name="success">True if operation was successful</param>
         public void EndTransaction(bool success);
+
+        public Location GetLocationById(int LocationID);
     }
 }

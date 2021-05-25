@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(StoreDBContext))]
-    [Migration("20210523172231_newMigration")]
+    [Migration("20210524200734_newMigration")]
     partial class newMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,27 +226,6 @@ namespace Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("StoreModels.Customer", b =>
-                {
-                    b.Property<int>("CustomerID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("CustomerID");
-
-                    b.ToTable("Customers");
-                });
-
             modelBuilder.Entity("StoreModels.Item", b =>
                 {
                     b.Property<int>("ItemID")
@@ -290,6 +269,9 @@ namespace Data.Migrations
                     b.Property<string>("LocationName")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("LocationID");
 
                     b.ToTable("Locations");
@@ -302,8 +284,8 @@ namespace Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("CustomerID")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CustomerID")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("LocationID")
                         .HasColumnType("integer");
@@ -410,7 +392,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("StoreModels.Order", b =>
                 {
-                    b.HasOne("StoreModels.Customer", "Customer")
+                    b.HasOne("StoreModels.ApplicationUser", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using StoreModels;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace WebUI
 {
@@ -43,21 +45,36 @@ namespace WebUI
                 EnableSsl = true,
             };
             services.AddDbContext<StoreDBContext>(options =>options.UseNpgsql(parseElephantSQLURL(this.Configuration.GetConnectionString("StoreDB"))));
+            
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<IRepository, RepoDB>();
             services.AddSingleton<IEmailService>( new EmailService(smtpClient));
+            // services.AddScoped<IAuthorizationHandler, OwnerAuthorizationHandler>();
             services.AddScoped<IServices, Services>();
+            //this crashes the program
+            // services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
             services.AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<StoreDBContext>()
             .AddDefaultUI()
             .AddDefaultTokenProviders();
+
+            
             services.Configure<IdentityOptions>(opts => 
                 {
                     opts.User.RequireUniqueEmail = false;
                     opts.SignIn.RequireConfirmedAccount = false;
                 }
             );
+
+            // services.AddAuthorization(options =>
+            // {
+            //     options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            //         .RequireAuthenticatedUser()
+            //         .Build();
+            // });
+            
             // services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<StoreDBContext>().AddDefaultTokenProviders();
             // services.AddIdentity<ApplicationUser, UserRole>(cfg => {
             //     cfg.User.RequireUniqueEmail = true;

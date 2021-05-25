@@ -29,7 +29,6 @@ namespace Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // modelBuilder.Entity<Customer>().Property(obj => obj.CustomerID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Location>().Property(obj => obj.LocationID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Order>().Property(obj => obj.OrderID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Item>().Property(obj => obj.ItemID).ValueGeneratedOnAdd();
