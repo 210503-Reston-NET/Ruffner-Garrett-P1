@@ -13,13 +13,17 @@
 </head>
 <body>
 <p>
-    <a asp-action="Create">Add New Products</a>
+    @* <a asp-action="AddProduct">Add New Products</a> *@
+    @Html.ActionLink("Add new Product", "AddProduct", new { LocationID = @ViewBag.LocationID })
+    @* <a asp-controller="Location"
+       asp-action="AddProduct" 
+       asp-route-id="@ViewBag.LocationID">Add New Product</a> *@
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductID)
+                @Html.DisplayNameFor(model => model.Product.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ItemID)
@@ -27,14 +31,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
-            <th></th>
+            <th>
+                <text>Update Quantity</text>
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductID)
+                @Html.DisplayFor(modelItem => item.Product.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ItemID)
@@ -43,9 +49,15 @@
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
-                @* @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
+                <form action="UpdateQuantity" method="post">
+                    <input type="number" label="New Quantity">
+                    <input type="Submit" value="Update"> 
+                </form>
+
+
+                @* @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ })  *@
+                
+               
             </td>
         </tr>
 }
