@@ -117,29 +117,33 @@ namespace WebUI
 
 
     
-
+        //Add the specified product to inventory
         [Authorize]
         [Route("Location/AddProductToInventory/{LocationID}/{ProductID}")]
          public async Task<ActionResult> AddProductToInventory(int LocationID, int ProductID)
         {
-          var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == LocationID).FirstOrDefault();
-          if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
-          {
-            _service.AddProductToInventory(LocationID,ProductID, 0);
-            return RedirectToAction("Admin", new{id=LocationID});
+          try{
+            var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == LocationID).FirstOrDefault();
+            if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
+            {
+              _service.AddProductToInventory(LocationID,ProductID, 0);
+              return RedirectToAction("Admin", new{id=LocationID});
+            }
+          }catch(Exception ex){
+            Log.Debug("Adding Product to invetory failed,{0}\n{1}", ex.Message, ex.StackTrace);
           }
 
           return RedirectToAction(nameof(Index));
         }
-        [Authorize] 
-        public async Task<ActionResult> CreateProduct(Product p){
+
+        // Getting Product details before adding to db
+        [Authorize]
+        [Authorize(Policy = "Owner")]
+        public ActionResult CreateProduct(Product p){
           try
           {
             if(ModelState.IsValid)
-            {
-              // var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == LocationID).FirstOrDefault();
-              // if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
-              // {           
+            {           
                 _service.AddProduct(p.Name, p.Price); 
                 return RedirectToAction(nameof(Index));
               //}

@@ -216,21 +216,6 @@ namespace Data
             Product found = _context.Products.FirstOrDefault(o => (o.ProductID == mProduct.ProductID));
             return found;
         }
-        // private Item GetInventoryItem(Item item, Location eLocation)
-        // {
-        //     Item found = _context.InventoryItems.FirstOrDefault(o=> (o.ItemID == item.ItemID));
-        //     return found;
-        // }
-
-        // public void UpdateInventoryItem(Location location, Item item)
-        // {
-        //     Location eLocation = GetLocation(location);
-        //     Item eItem = GetInventoryItem(item, eLocation);
-        //     eItem.Quantity = item.Quantity;
-        //     var thing =  _context.InventoryItems.Update(eItem);            
-        //     _context.SaveChanges();
-        //     _context.ChangeTracker.Clear();
-        // }
 
         public void StartTransaction()
         {
@@ -250,8 +235,10 @@ namespace Data
 
         public Location GetLocationById(int LocationID)
         {
-            Log.Verbose("Location ID {0}", LocationID);
-            Location found =  _context.Locations.FirstOrDefault( o => (o.LocationID == LocationID));
+            Log.Verbose("Retrieving Locaiton by Id: {0}", LocationID);
+            Location found =  this.GetAllLocations().Where(l => l.LocationID == LocationID).FirstOrDefault();
+            Log.Verbose("Location Found {0}", found.LocationName);
+                // _context.Locations.FirstOrDefault( o => (o.LocationID == LocationID));
             return found;
         }
 

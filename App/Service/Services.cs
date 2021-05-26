@@ -85,22 +85,25 @@ namespace Service
         }
 
         public void AddProductToInventory(int LocationID, int ProductID, int stock)
-        {
-           
-            // Create new Item for inventory
+        {           
+            //Check if Location + product Exist
             Location location = _repo.GetLocationById(LocationID);
+            if (location == null) throw new Exception("Location Does not exist");
             Product product = _repo.GetProductById(ProductID);
+            if (product == null) throw new Exception("Product Does not exist");
+            // Create new Item for inventory
             InventoryItem ii = new InventoryItem(){LocationID = LocationID, ProductID = ProductID, Quantity = stock};
-            // Item newItem = new Item(ProductID, stock);
-            //check inventory for product
-            // foreach (Item item in location.InventoryItems)
-            // {
-            //     if(newItem.Product.Name == item.Product.Name)
-            //     {
-            //         throw new Exception("Product is Already in Inventory");
-            //     }
-            // }
+            //check if product is int inventory
+            List<InventoryItem> InventoryItems = getInventory(LocationID);
+
+            foreach (var item in InventoryItems)
+            {
+                if(item.ProductID == ProductID){
+                    throw new Exception("Item is already included in Locations Inventory");
+                }
+            }
             //Product is not in inventory
+
             //Add Item to Inventory
             try{
                 Log.Verbose("{0}",product.ProductID);
