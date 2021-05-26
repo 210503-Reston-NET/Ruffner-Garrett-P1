@@ -84,24 +84,37 @@ namespace Service
             }
         }
 
-        public void AddProductToInventory(Location location, Product product, int stock)
+        public void AddProductToInventory(int LocationID, int ProductID, int stock)
         {
            
             // Create new Item for inventory
-            Item newItem = new Item(product.ProductID, stock);
+            Location location = _repo.GetLocationById(LocationID);
+            Product product = _repo.GetProductById(ProductID);
+            InventoryItem ii = new InventoryItem(){LocationID = LocationID, ProductID = ProductID, Quantity = stock};
+            // Item newItem = new Item(ProductID, stock);
             //check inventory for product
-            foreach (Item item in location.InventoryItems)
-            {
-                if(newItem.Product.Name == item.Product.Name)
-                {
-                    throw new Exception("Product is Already in Inventory");
-                }
-            }
+            // foreach (Item item in location.InventoryItems)
+            // {
+            //     if(newItem.Product.Name == item.Product.Name)
+            //     {
+            //         throw new Exception("Product is Already in Inventory");
+            //     }
+            // }
             //Product is not in inventory
             //Add Item to Inventory
             try{
-                location.InventoryItems.Add(newItem);
-                _repo.AddProductToInventory(location, newItem);
+                Log.Verbose("{0}",product.ProductID);
+                Log.Verbose("{0}",location.LocationID);
+                Log.Verbose("{0}", product.InventoryItems);
+                if(product.InventoryItems == null){
+                    product.InventoryItems = new List<InventoryItem>();
+                }
+                if(location.InventoryItems ==null){
+                    location.InventoryItems = new List<InventoryItem>();
+                }
+                product.InventoryItems.Add(ii);
+                location.InventoryItems.Add(ii);
+                _repo.AddProductToInventory(location, ii);
             }catch(Exception ex){
                 Log.Error("Failed to Add Product To Inventory {0} \n{1}",ex.Message, ex.StackTrace);
                 throw new Exception("Failed to Add product to Inventory");
@@ -139,34 +152,34 @@ namespace Service
 
         public void PlaceOrder(Location location, ApplicationUser customer, List<Item> items)
         {
-            Order order = new Order(customer, location, items);
-            //make sure that location has stock then decrease stock
-                //For each item in items, get relavant item from location and try to decrease stock
-                    //Then call UpdateInventoryItem(Models.Location location, Models.Item item) with each updated item.
-            //This is going to be kinda slow n^2 time :(
-            //Start transaction
-            _repo.StartTransaction();
-            try{
-                foreach (Item item in items)
-                {
-                    SellItems(location, item);
-                }
-            }catch(Exception ex){
-                Log.Error("Could not update stock From order. Rolling back",ex, ex.Message);
-                _repo.EndTransaction(false);
-                throw new Exception("Not enough of an Item in stock. Order Failed.");
-            }
+            // Order order = new Order(customer, location, items);
+            // //make sure that location has stock then decrease stock
+            //     //For each item in items, get relavant item from location and try to decrease stock
+            //         //Then call UpdateInventoryItem(Models.Location location, Models.Item item) with each updated item.
+            // //This is going to be kinda slow n^2 time :(
+            // //Start transaction
+            // _repo.StartTransaction();
+            // try{
+            //     foreach (Item item in items)
+            //     {
+            //         SellItems(location, item);
+            //     }
+            // }catch(Exception ex){
+            //     Log.Error("Could not update stock From order. Rolling back",ex, ex.Message);
+            //     _repo.EndTransaction(false);
+            //     throw new Exception("Not enough of an Item in stock. Order Failed.");
+            // }
 
-            try{
-            _repo.PlaceOrder(order);
-            _repo.EndTransaction(true);
-            _emailService.SendOrderConfirmationEmail(customer, order);
-            }catch(Exception ex )
-            {
-                _repo.EndTransaction(false);
-                Log.Error("Failed to place order\n{0}\n{1}\n{2}", ex, ex.Message, ex.StackTrace);
-                throw new Exception("Order Failed");
-            }
+            // try{
+            // _repo.PlaceOrder(order);
+            // _repo.EndTransaction(true);
+            // _emailService.SendOrderConfirmationEmail(customer, order);
+            // }catch(Exception ex )
+            // {
+            //     _repo.EndTransaction(false);
+            //     Log.Error("Failed to place order\n{0}\n{1}\n{2}", ex, ex.Message, ex.StackTrace);
+            //     throw new Exception("Order Failed");
+            // }
         }
         private void SellItems(Location location, Item oItem)
         {
@@ -200,7 +213,7 @@ namespace Service
             //Log.Debug("Updating stock of {0} at {1} Qunatity:{2}",item.Product.Name,location.LocationName, amount);
             item.ChangeQuantity(amount);
             try{
-                _repo.UpdateInventoryItem(location, item);
+                // _repo.UpdateInventoryItem(location, item);
                 //_repo.UpdateLocation(location);
             }catch(Exception ex){
                 Log.Error("Could not update inventory at Location",ex, ex.Message);
@@ -256,10 +269,11 @@ namespace Service
             return 10;
         }
 
-        public List<Item> getInventory(int LocationID)
+        public List<InventoryItem> getInventory(int LocationID)
         {
            Location l =  _repo.GetLocationById(LocationID);
            return l.InventoryItems;
         }
+
     }
 }

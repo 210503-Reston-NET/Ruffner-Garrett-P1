@@ -60,13 +60,13 @@ namespace Data
         /// </summary>
         /// <param name="location"></param>
         /// <param name="item"></param>
-        void UpdateInventoryItem(Location location, Item item);
+        // void UpdateInventoryItem(Location location, Item item);
         /// <summary>
         /// Adds a product to a locations inventory
         /// </summary>
         /// <param name="location"></param>
         /// <param name="item"></param>
-        public void AddProductToInventory(Location location, Item item);
+        public void AddProductToInventory(Location location, InventoryItem item);
         /// <summary>
         /// Start A Transaction
         /// </summary>
@@ -78,5 +78,6 @@ namespace Data
         public void EndTransaction(bool success);
 
         public Location GetLocationById(int LocationID);
+        public Product GetProductById(int ProductID);
     }
 }

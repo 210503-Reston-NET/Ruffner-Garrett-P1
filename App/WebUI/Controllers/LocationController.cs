@@ -74,31 +74,82 @@ namespace WebUI
         public ActionResult Shop(int Id)
         {
           Log.Verbose("ID from action: {0}", Id);
-          List<Item> items = _service.getInventory(Id);
-          List<ItemVM> newItems = new List<ItemVM>();
-          items.ForEach(item => newItems.Add(new ItemVM(item, Id)));
-          return View(newItems);
+          List<InventoryItem> items = _service.getInventory(Id);
+          //List<ItemVM> newItems = new List<ItemVM>();
+          //items.ForEach(item => newItems.Add(new ItemVM(item)));
+          return View(items);
         }
 
-        [Authorize()]
-        
-        
+        [Authorize] 
         public async Task<ActionResult> Admin(int Id)
         {
           var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == Id).FirstOrDefault();
           if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
           {
-            List<Item> items = item.InventoryItems;
-            List<ItemVM> newItems = new List<ItemVM>();
-            items.ForEach(item => newItems.Add(new ItemVM(item)));
-            return View(newItems);
+            ViewBag.LocationID = item.LocationID;
+            return View(item.InventoryItems);
           }  
 
           return RedirectToAction(nameof(Index));
-          //if(await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))){
+        }
 
-          
-          
+
+        [Authorize]
+        [Route("Location/AddProduct/{LocationID}")]
+        public async Task<ActionResult> AddProduct(int LocationID)
+        {
+
+          Log.Verbose("LocationID: {0}", LocationID);
+          var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == LocationID).FirstOrDefault();
+          if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
+          {
+            Location location = item;
+            List<int> items= new List<int>();
+            location.InventoryItems.ForEach(i => items.Add(i.ProductID));
+            ViewBag.LocationID=LocationID;
+            //get all products not in inventory
+            return View(_service.GetAllProducts().Select(p => p).Where(product => !items.Contains(product.ProductID) ));
+          }  
+
+          return RedirectToAction(nameof(Index));
+         
+        }
+
+
+    
+
+        [Authorize]
+        [Route("Location/AddProductToInventory/{LocationID}/{ProductID}")]
+         public async Task<ActionResult> AddProductToInventory(int LocationID, int ProductID)
+        {
+          var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == LocationID).FirstOrDefault();
+          if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
+          {
+            _service.AddProductToInventory(LocationID,ProductID, 0);
+            return RedirectToAction("Admin", new{id=LocationID});
+          }
+
+          return RedirectToAction(nameof(Index));
+        }
+        [Authorize] 
+        public async Task<ActionResult> CreateProduct(Product p){
+          try
+          {
+            if(ModelState.IsValid)
+            {
+              // var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == LocationID).FirstOrDefault();
+              // if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
+              // {           
+                _service.AddProduct(p.Name, p.Price); 
+                return RedirectToAction(nameof(Index));
+              //}
+            }
+            Log.Error("Model state invalid For Location Creation ");
+            return View();
+          }catch{
+            return View();
+          }
+
         }
     }
 }

@@ -17,7 +17,7 @@ namespace StoreModels
             this.OrderID = OrderID;
         }
 
-        public Order(ApplicationUser customer, Location location, List<Item> items)
+        public Order(ApplicationUser customer, Location location, List<OrderItem> items)
         {
             this.Customer = customer;
             this.Location = location;
@@ -25,7 +25,7 @@ namespace StoreModels
             this.Date = DateTime.Now;
             CalculateTotal();
         }
-        public Order(ApplicationUser customer, Location location, List<Item> items, DateTime date)
+        public Order(ApplicationUser customer, Location location, List<OrderItem> items, DateTime date)
         {
             this.Customer = customer;
             this.Location = location;
@@ -33,7 +33,7 @@ namespace StoreModels
             this.Date = date;
             CalculateTotal();
         }
-         public Order(ApplicationUser customer, Location location, List<Item> items, DateTime date, int id): this(customer,location,items,date)
+         public Order(ApplicationUser customer, Location location, List<OrderItem> items, DateTime date, int id): this(customer,location,items,date)
         {
             this.OrderID = id;
         }
@@ -47,7 +47,7 @@ namespace StoreModels
         public ApplicationUser Customer { get; set; }
         public int LocationID { get; set; }
         public Location Location { get; set; }
-        public List<Item> OrderItems { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
 
         public double Total { get=> _total; set{CalculateTotal();}}
         

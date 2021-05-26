@@ -23,9 +23,12 @@ namespace StoreModels
         {
             return String.Format("{0} Quantity: {1}",ProductID, Quantity);
         }
+        //PK
+        public int ItemID { get; set; }
+        //FK
         public int ProductID { get; set; }
         public Product Product { get; set; }
-        public int ItemID { get; set; }
+       
 
         public int Quantity 
         { 

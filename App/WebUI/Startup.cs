@@ -142,7 +142,10 @@ namespace WebUI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                    endpoints.MapRazorPages();
+                // endpoints.MapControllerRoute(
+                //     name: "notDefault",
+                //     pattern: "{controller=Home}/{action=Index}/{id?}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

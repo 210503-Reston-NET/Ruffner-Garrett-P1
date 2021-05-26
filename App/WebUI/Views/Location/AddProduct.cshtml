@@ -1,0 +1,52 @@
+@model IEnumerable<StoreModels.Product>
+
+@{
+     ViewData["Title"] = "AddProduct";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add Product</title>
+</head>
+<body>
+<p>
+    <a asp-controller="Location"
+       asp-action="CreateProduct" 
+       asp-route-id="@ViewBag.LocationID">Create New Product</a>
+</p>
+<h1>Products Not In Store:</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.ActionLink("Add To Inventory", "AddProductToInventory", new { ProductID=item.ProductID, LocationID=@ViewBag.LocationID})
+                @* @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+
 namespace StoreModels
 {
     //This class should contain all necessary fields to define a product.
@@ -32,6 +34,8 @@ namespace StoreModels
                 }
             }
         }
+        public List<OrderItem> OrderItems{get; set;}
+        public List<InventoryItem> InventoryItems{get; set;}
         public double Price 
         { 
             get => _price; 

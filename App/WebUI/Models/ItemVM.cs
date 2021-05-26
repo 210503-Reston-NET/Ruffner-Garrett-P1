@@ -13,17 +13,24 @@ namespace WebUI.Models
             ItemID = item.ItemID;
             Quantity = item.Quantity;
         }
-
-         public ItemVM(Item item, int LocationID): this(item)
+        public ItemVM(InventoryItem item)
         {
-            // ProductID = item.ProductID;
-            // Product = new ProductVM(item.Product);
-            // ItemID = item.ItemID;
-            // Quantity = item.Quantity;
-            this.LocationID = LocationID;
+            ProductID = item.ProductID;
+            Product = new ProductVM(item.Product);
+            Quantity = item.Quantity;
+            LocationID = item.LocationID;
+        }
+
+        //  public ItemVM(Item item, int LocationID): this(item)
+        // {
+        //     // ProductID = item.ProductID;
+        //     // Product = new ProductVM(item.Product);
+        //     // ItemID = item.ItemID;
+        //     // Quantity = item.Quantity;
+        //     this.LocationID = LocationID;
             
 
-        }
+        // }
 
         public int ProductID { get; set; }
         public ProductVM Product { get; set; }
