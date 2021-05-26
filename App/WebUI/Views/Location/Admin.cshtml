@@ -1,4 +1,4 @@
-@model IEnumerable<WebUI.Models.ItemVM>
+@model IEnumerable<StoreModels.InventoryItem>
 
 @{
      ViewData["Title"] = "Admin";
@@ -26,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.Product.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ItemID)
+                @Html.DisplayNameFor(model => model.ProductID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
@@ -43,20 +43,16 @@
                 @Html.DisplayFor(modelItem => item.Product.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ItemID)
+                @Html.DisplayFor(modelItem => item.ProductID)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
                 <form action="UpdateQuantity" method="post">
-                    <input type="number" label="New Quantity">
+                    <input type="number" min="0" label="New Quantity">
                     <input type="Submit" value="Update"> 
-                </form>
-
-
-                @* @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ })  *@
-                
+                </form>               
                
             </td>
         </tr>

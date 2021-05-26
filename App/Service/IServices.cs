@@ -39,7 +39,7 @@ namespace Service
         /// <param name="location"></param>
         /// <param name="product"></param>
         /// <param name="stock"></param>
-        public void AddProductToInventory(Location location, Product product, int stock);
+        public void AddProductToInventory(int LocationID, int ProductID, int stock);
         /// <summary>
         /// Create and add a new Location to Repo
         /// </summary>
@@ -71,7 +71,7 @@ namespace Service
         /// <returns></returns>
         public double CalculateOrderTotal(List<Item> items);
 
-        public List<Item> getInventory(int LocationId);
+        public List<InventoryItem> getInventory(int LocationId);
 
     }
 }

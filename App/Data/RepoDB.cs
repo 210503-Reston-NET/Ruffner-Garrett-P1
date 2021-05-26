@@ -16,14 +16,6 @@ namespace Data
             _context = context;
         }
         private IDbContextTransaction _transaction;
-        // public void AddCustomer(Customer customer)
-        // {
-        //     _context.Customers.Add(
-        //         customer
-        //     );
-        //     _context.SaveChanges();
-        //     _context.ChangeTracker.Clear();
-        // }
 
         public void AddLocation(Location location)
         {
@@ -40,68 +32,49 @@ namespace Data
 
         public void AddProduct(Product product)
         {
-            _context.Products.Add(
-                product
-            //    new Entity.Product
-            //    {
-            //         Name = product.ProductName,
-            //         Price = product.Price
-            //    }
-            );
+            _context.Products.Add(product);
             _context.SaveChanges();
-            _context.ChangeTracker.Clear();
+            _context.Entry(product).GetDatabaseValues();
+            
         }
 
-        public void AddProductToInventory(Location location, Item item)
+        public void AddProductToInventory(Location location, InventoryItem item)
         {
-            location.InventoryItems.Add(item);
-            _context.InventoryItems.Add( 
-                item
-                // location.InventoryItems.Add(item)
-                // new Entity.InventoryItem
-                // {
-                //     Location = GetLocation(location),
-                //     Product = GetProduct(item.Product),
-                //     Quantity = item.Quantity
-                // }
-           );
-           _context.SaveChanges();
-           _context.ChangeTracker.Clear();
+            _context.InventoryItems.Add(item);
+            _context.Locations.Update(location);
+            _context.SaveChanges();
         }
 
         public List<ApplicationUser> GetAllCustomers()
         {
-
             return _context.Users.Select(user => user).ToList();
-            // return _context.AspNetUsers.Select(
-            //     // customer => new ApplicationUser(customer.Name, customer.Address, customer.Email, customer.CustomerID)
-            // ).ToList();
         }
 
         public List<Location> GetAllLocations()
         {
             //WHAT HAVE I CREATED
-            return _context.Locations.Select(location => location).ToList();//new Location(location.LocationName,location.Address, location.UserId, location.InventoryItems, location.LocationID)).ToList();
-            //     location => new Location(
-            //         location.LocationName, 
-            //         location.Address, 
-            //         location.InventoryItems.Select( 
-            //             i => new Item(
-            //                 new  Product(
-            //                     i.Product.Name, 
-            //                     (double) i.Product.Price
-            //                 ),
-            //                 (int) i.Quantity
-            //             )
-            //         ).ToList()
-            //     )
-            // ).ToList();
+            var l = _context.Locations.Select(
+                location =>new Location(){
+                    LocationID = location.LocationID,
+                    LocationName = location.LocationName,
+                    Address = location.Address,
+                    UserId = location.UserId,
+                    InventoryItems = _context.InventoryItems.Select(
+                        i => new InventoryItem(){
+                            LocationID = i.LocationID,
+                            location = i.location,
+                            ProductID = i.ProductID,
+                            Product = i.Product
+                        }).Where(i => i.LocationID == location.LocationID).ToList()
+                    }).ToList();
+            return l;
+            
         }
 
         public List<Product> GetAllProducts()
         {
             return _context.Products.Select(
-                product => new Product(product.Name, (double) product.Price)
+                product => product
             ).ToList();
         }
 
@@ -243,21 +216,21 @@ namespace Data
             Product found = _context.Products.FirstOrDefault(o => (o.ProductID == mProduct.ProductID));
             return found;
         }
-        private Item GetInventoryItem(Item item, Location eLocation)
-        {
-            Item found = _context.InventoryItems.FirstOrDefault(o=> (o.ItemID == item.ItemID));
-            return found;
-        }
+        // private Item GetInventoryItem(Item item, Location eLocation)
+        // {
+        //     Item found = _context.InventoryItems.FirstOrDefault(o=> (o.ItemID == item.ItemID));
+        //     return found;
+        // }
 
-        public void UpdateInventoryItem(Location location, Item item)
-        {
-            Location eLocation = GetLocation(location);
-            Item eItem = GetInventoryItem(item, eLocation);
-            eItem.Quantity = item.Quantity;
-            var thing =  _context.InventoryItems.Update(eItem);            
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-        }
+        // public void UpdateInventoryItem(Location location, Item item)
+        // {
+        //     Location eLocation = GetLocation(location);
+        //     Item eItem = GetInventoryItem(item, eLocation);
+        //     eItem.Quantity = item.Quantity;
+        //     var thing =  _context.InventoryItems.Update(eItem);            
+        //     _context.SaveChanges();
+        //     _context.ChangeTracker.Clear();
+        // }
 
         public void StartTransaction()
         {
@@ -280,6 +253,12 @@ namespace Data
             Log.Verbose("Location ID {0}", LocationID);
             Location found =  _context.Locations.FirstOrDefault( o => (o.LocationID == LocationID));
             return found;
+        }
+
+        public Product GetProductById(int ProductID)
+        {
+           Product found = _context.Products.FirstOrDefault(o => o.ProductID == ProductID);
+           return found;
         }
     }
 }

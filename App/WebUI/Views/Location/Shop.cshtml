@@ -1,4 +1,4 @@
-@model IEnumerable<WebUI.Models.ItemVM>
+@model IEnumerable<StoreModels.InventoryItem>
 
 @{
      ViewData["Title"] = "Shop";
@@ -22,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.ProductID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ItemID)
+                @Html.DisplayNameFor(model => model.Product.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
@@ -37,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.ProductID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ItemID)
+                @Html.DisplayFor(modelItem => item.Product.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)

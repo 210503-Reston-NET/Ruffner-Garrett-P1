@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System;
 using System.Globalization;
 using System.Collections.Generic;
@@ -9,8 +10,9 @@ namespace StoreModels
     public class Location
     {
         public Location(){
-            InventoryItems  = new List<Item>();
+            InventoryItems  = new List<InventoryItem>();
         }
+        
         // public Location(string locationName, string address)
         // {
         //     this.Address = address;
@@ -22,9 +24,9 @@ namespace StoreModels
             this.Address = address;
             this.LocationName = locationName;
             this.UserId = managerId;
-            InventoryItems  = new List<Item>();
+            InventoryItems  = new List<InventoryItem>();
         }
-        public Location(string locationName, string address, Guid managerId, List<Item> inventory, int id )
+        public Location(string locationName, string address, Guid managerId, List<InventoryItem> inventory, int id )
         {
             this.Address = address;
             this.LocationName = locationName;
@@ -36,13 +38,15 @@ namespace StoreModels
         {
             return String.Format("{0} Address: {1}",this.LocationName,this.Address);
         }
-        
+        [RequiredAttribute]
         public int LocationID { get; set; }
+        [RequiredAttribute]
         public string Address { get; set; }
+        [RequiredAttribute]
         public string LocationName { get; set; }
-
-        public List<Item> InventoryItems { get; set; }
-
+        [RequiredAttribute]
+        public List<InventoryItem> InventoryItems { get; set; }
+        [RequiredAttribute]
         public Guid UserId { get; set;} 
     }
 }

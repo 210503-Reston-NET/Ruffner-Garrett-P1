@@ -224,18 +224,30 @@ namespace Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("StoreModels.InventoryItem", b =>
+                {
+                    b.Property<int>("ProductID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LocationID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProductID", "LocationID");
+
+                    b.HasIndex("LocationID");
+
+                    b.ToTable("InventoryItems");
+                });
+
             modelBuilder.Entity("StoreModels.Item", b =>
                 {
                     b.Property<int>("ItemID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int?>("LocationID")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("OrderID")
-                        .HasColumnType("integer");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("integer");
@@ -244,10 +256,6 @@ namespace Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("ItemID");
-
-                    b.HasIndex("LocationID");
-
-                    b.HasIndex("OrderID");
 
                     b.HasIndex("ProductID");
 
@@ -298,6 +306,24 @@ namespace Data.Migrations
                     b.HasIndex("LocationID");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("StoreModels.OrderItem", b =>
+                {
+                    b.Property<int>("ProductID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProductID", "OrderID");
+
+                    b.HasIndex("OrderID");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("StoreModels.Product", b =>
@@ -369,16 +395,27 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("StoreModels.InventoryItem", b =>
+                {
+                    b.HasOne("StoreModels.Location", "location")
+                        .WithMany("InventoryItems")
+                        .HasForeignKey("LocationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StoreModels.Product", "Product")
+                        .WithMany("InventoryItems")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("StoreModels.Item", b =>
                 {
-                    b.HasOne("StoreModels.Location", null)
-                        .WithMany("InventoryItems")
-                        .HasForeignKey("LocationID");
-
-                    b.HasOne("StoreModels.Order", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderID");
-
                     b.HasOne("StoreModels.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
@@ -407,6 +444,25 @@ namespace Data.Migrations
                     b.Navigation("Location");
                 });
 
+            modelBuilder.Entity("StoreModels.OrderItem", b =>
+                {
+                    b.HasOne("StoreModels.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StoreModels.Product", "Product")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("StoreModels.Location", b =>
                 {
                     b.Navigation("InventoryItems");
@@ -414,6 +470,13 @@ namespace Data.Migrations
 
             modelBuilder.Entity("StoreModels.Order", b =>
                 {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("StoreModels.Product", b =>
+                {
+                    b.Navigation("InventoryItems");
+
                     b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618

@@ -214,33 +214,69 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "InventoryItems",
+                columns: table => new
+                {
+                    LocationID = table.Column<int>(type: "integer", nullable: false),
+                    ProductID = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InventoryItems", x => new { x.ProductID, x.LocationID });
+                    table.ForeignKey(
+                        name: "FK_InventoryItems_Locations_LocationID",
+                        column: x => x.LocationID,
+                        principalTable: "Locations",
+                        principalColumn: "LocationID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InventoryItems_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "ProductID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Item",
                 columns: table => new
                 {
                     ItemID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProductID = table.Column<int>(type: "integer", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    LocationID = table.Column<int>(type: "integer", nullable: true),
-                    OrderID = table.Column<int>(type: "integer", nullable: true)
+                    Quantity = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Item", x => x.ItemID);
                     table.ForeignKey(
-                        name: "FK_Item_Locations_LocationID",
-                        column: x => x.LocationID,
-                        principalTable: "Locations",
-                        principalColumn: "LocationID",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_Item_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "ProductID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    OrderID = table.Column<int>(type: "integer", nullable: false),
+                    ProductID = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItems", x => new { x.ProductID, x.OrderID });
                     table.ForeignKey(
-                        name: "FK_Item_Orders_OrderID",
+                        name: "FK_OrderItems_Orders_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Orders",
                         principalColumn: "OrderID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Item_Products_ProductID",
+                        name: "FK_OrderItems_Products_ProductID",
                         column: x => x.ProductID,
                         principalTable: "Products",
                         principalColumn: "ProductID",
@@ -285,19 +321,19 @@ namespace Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Item_LocationID",
-                table: "Item",
+                name: "IX_InventoryItems_LocationID",
+                table: "InventoryItems",
                 column: "LocationID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Item_OrderID",
-                table: "Item",
-                column: "OrderID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Item_ProductID",
                 table: "Item",
                 column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderID",
+                table: "OrderItems",
+                column: "OrderID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerID",
@@ -328,7 +364,13 @@ namespace Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "InventoryItems");
+
+            migrationBuilder.DropTable(
                 name: "Item");
+
+            migrationBuilder.DropTable(
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
