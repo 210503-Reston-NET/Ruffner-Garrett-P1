@@ -62,7 +62,7 @@ namespace Service
         /// <param name="customer"></param>
         /// <param name="items"></param>
         public void PlaceOrder(Location location, ApplicationUser customer, List<Item> items);
-        public void updateItemInStock(Location location, Item item, int amount);
+        public void updateItemInStock(InventoryItem item);
         /// <summary>
         /// Calculates Total cost from a list of Items
         /// This is a convienence to avoid creating order objects in the UI

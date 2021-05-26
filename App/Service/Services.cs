@@ -211,16 +211,16 @@ namespace Service
                         
         }
 
-        public void updateItemInStock(Location location, Item item, int amount)
+        public void updateItemInStock(InventoryItem item)
         {   
             //Log.Debug("Updating stock of {0} at {1} Qunatity:{2}",item.Product.Name,location.LocationName, amount);
-            item.ChangeQuantity(amount);
+            //item.ChangeQuantity(amount);
             try{
-                // _repo.UpdateInventoryItem(location, item);
+                _repo.UpdateInventoryItem(item);
                 //_repo.UpdateLocation(location);
             }catch(Exception ex){
                 Log.Error("Could not update inventory at Location",ex, ex.Message);
-                item.ChangeQuantity(-amount);
+                //item.ChangeQuantity(-amount);
             }
         }
 
@@ -274,7 +274,9 @@ namespace Service
 
         public List<InventoryItem> getInventory(int LocationID)
         {
+           Log.Verbose("Retreiving Inventory of Location {0}",LocationID);
            Location l =  _repo.GetLocationById(LocationID);
+         
            return l.InventoryItems;
         }
 

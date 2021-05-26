@@ -64,7 +64,8 @@ namespace Data
                             LocationID = i.LocationID,
                             location = i.location,
                             ProductID = i.ProductID,
-                            Product = i.Product
+                            Product = i.Product,
+                            Quantity = i.Quantity
                         }).Where(i => i.LocationID == location.LocationID).ToList()
                     }).ToList();
             return l;
@@ -236,9 +237,10 @@ namespace Data
         public Location GetLocationById(int LocationID)
         {
             Log.Verbose("Retrieving Locaiton by Id: {0}", LocationID);
-            Location found =  this.GetAllLocations().Where(l => l.LocationID == LocationID).FirstOrDefault();
+            var locations = this.GetAllLocations();
+            //locations.ForEach(l => l.InventoryItems.ForEach(i => Log.Verbose("id: {0} Quantity: {1}",i.ProductID,  i.Quantity)));
+            Location found =  locations.Where(l => l.LocationID == LocationID).FirstOrDefault();
             Log.Verbose("Location Found {0}", found.LocationName);
-                // _context.Locations.FirstOrDefault( o => (o.LocationID == LocationID));
             return found;
         }
 
@@ -246,6 +248,13 @@ namespace Data
         {
            Product found = _context.Products.FirstOrDefault(o => o.ProductID == ProductID);
            return found;
+        }
+
+        public void UpdateInventoryItem(InventoryItem item)
+        {
+            _context.InventoryItems.Update(item);
+            //_context.Entry(item).GetDatabaseValues();
+            _context.SaveChanges();
         }
     }
 }

@@ -83,11 +83,11 @@ namespace WebUI
         [Authorize] 
         public async Task<ActionResult> Admin(int Id)
         {
-          var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == Id).FirstOrDefault();
+          var item = _service.GetAllLocations().Where(location => location.LocationID == Id).FirstOrDefault();
           if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
           {
             ViewBag.LocationID = item.LocationID;
-            return View(item.InventoryItems);
+            return View(_service.getInventory(item.LocationID));
           }  
 
           return RedirectToAction(nameof(Index));
@@ -154,6 +154,30 @@ namespace WebUI
             return View();
           }
 
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("Location/UpdateQuantity")]
+        public async void UpdateQuantity(InventoryItem i){
+          
+          Log.Verbose("Updating Item Location: {0}, Product:{1}, Quantity: {2}", i.LocationID, i.ProductID, i.Quantity);
+
+          int LocationID = i.LocationID;
+          var item = _service.GetAllLocations().Select(location => location).Where(location => location.LocationID == LocationID).FirstOrDefault();
+          if ((await _AuthorizationService.AuthorizeAsync(User, item, new ClaimsAuthorizationRequirement("Owner", new List<string>{item.LocationID.ToString()}))).Succeeded)
+          {
+            _service.updateItemInStock(i);
+            
+
+            Response.Redirect($"Admin/{LocationID}");
+          }else{
+            Response.Redirect("/");
+          }
+          
+
+
+          //  return View(LocationID);
         }
     }
 }

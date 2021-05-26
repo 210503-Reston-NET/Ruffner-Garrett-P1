@@ -20,16 +20,16 @@ namespace StoreModels
         public Product Product { get; set; }
 
         public int Quantity 
-        { 
-            get => _quantity; 
-            set
-            {
-                if (value < 0){
-                    throw new Exception("Quantity cannot be < 0");
-                }else{
-                    _quantity = value;
-                }
-            } 
-        }
+        { get; set; }
+        //     get => _quantity; 
+        //     set
+        //     {
+        //         if (value < 0){
+        //             throw new Exception("Quantity cannot be < 0");
+        //         }else{
+        //             _quantity = value;
+        //         }
+        //     } 
+        // }
     }
 }

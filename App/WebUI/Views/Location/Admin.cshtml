@@ -49,8 +49,11 @@
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
-                <form action="UpdateQuantity" method="post">
-                    <input type="number" min="0" label="New Quantity">
+                @* {LocationID}/{ProductID}/{Quantity} *@
+                <form action="@Url.Action("UpdateQuantity","Location")" method="post">
+                    <input type="hidden" name="LocationID" value="@item.LocationID">
+                    <input type="hidden" name="ProductID" value="@item.ProductID">
+                    <input type="number" name="Quantity" min="0" label="New Quantity">
                     <input type="Submit" value="Update"> 
                 </form>               
                

@@ -60,7 +60,7 @@ namespace Data
         /// </summary>
         /// <param name="location"></param>
         /// <param name="item"></param>
-        // void UpdateInventoryItem(Location location, Item item);
+        void UpdateInventoryItem(InventoryItem item);
         /// <summary>
         /// Adds a product to a locations inventory
         /// </summary>
