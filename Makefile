@@ -6,6 +6,8 @@ solution_root = App
 #solution_main is the directory containing the project with a main method. Relative to solution_root.
 solution_main = WebUI
 
+solution_dl = $(solution_root)/Data
+
 #log_dir is the name of directory with logs relative to solution_root
 log_dir = logs
 
@@ -16,8 +18,13 @@ run:
 test:
 	dotnet test $(solution_root)
 publish:
-	dotnet publish  ./$(solution_root)/$(solution_main) -c Release -o ./$(solution_root)/$(solution_main)/publish
-
+	dotnet publish  $(solution_root)/$(solution_main) -c Release -o $(solution_root)/$(solution_main)/publish
+rebuild-db:
+	cd $(solution_dl)
+	dotnet ef database drop -c StoreDBContext --startup-project ../$(solution_root)
+	dotnet ef migrations remove --startup-project ../$(solution_main)
+	dotnet ef migrations add newMigration -c StoreDBContext --startup-project ../$(solution_main)
+	dotnet ef database update newMigration --startup-project ../$(solution_main)
 clean: clearlogs
 	dotnet clean $(solution_root)
 clearlogs:
