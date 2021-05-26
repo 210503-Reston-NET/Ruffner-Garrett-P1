@@ -1,4 +1,4 @@
-.PHONY: build run clean test clearlogs
+.PHONY: build run clean test clearlogs publish
 
 #solution_root is the directory containing the root .sln file
 solution_root = App
@@ -15,6 +15,9 @@ run:
 	dotnet run --project $(solution_root)/$(solution_main)
 test:
 	dotnet test $(solution_root)
+publish:
+	dotnet publish  ./$(solution_root)/$(solution_main) -c Release -o ./$(solution_root)/$(solution_main)/publish
+
 clean: clearlogs
 	dotnet clean $(solution_root)
 clearlogs:

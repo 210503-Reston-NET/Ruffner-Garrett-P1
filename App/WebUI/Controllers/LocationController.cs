@@ -96,7 +96,7 @@ namespace WebUI
 
         [Authorize]
         [Route("Location/AddProduct/{LocationID}")]
-        public async Task<ActionResult> AddProduct(int LocationID)
+        public async Task<ActionResult> AddProduct(int LocationID)        
         {
 
           Log.Verbose("LocationID: {0}", LocationID);
