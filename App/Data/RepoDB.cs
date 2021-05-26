@@ -184,7 +184,6 @@ namespace Data
 
             //This can probably be done with the ef-core change tracker in the future
             _context.SaveChanges();
-            _context.ChangeTracker.Clear();
             }catch(Exception ex){
                 Log.Error("Could not add order to db {0}\n {1}", ex.StackTrace, ex.Message);
                 throw new Exception("Order Failed");
@@ -253,7 +252,7 @@ namespace Data
         public void UpdateInventoryItem(InventoryItem item)
         {
             _context.InventoryItems.Update(item);
-            //_context.Entry(item).GetDatabaseValues();
+            _context.Entry(item).GetDatabaseValues();
             _context.SaveChanges();
         }
     }

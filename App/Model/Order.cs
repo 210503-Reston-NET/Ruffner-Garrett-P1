@@ -16,26 +16,18 @@ namespace StoreModels
             this.LocationID = LocationID;
             this.OrderID = OrderID;
         }
+        public Order(){
 
-        public Order(ApplicationUser customer, Location location, List<OrderItem> items)
-        {
-            this.Customer = customer;
-            this.Location = location;
-            this.OrderItems = items;
-            this.Date = DateTime.Now;
-            CalculateTotal();
         }
-        public Order(ApplicationUser customer, Location location, List<OrderItem> items, DateTime date)
+
+         public Order(ApplicationUser customer, Location location, List<OrderItem> items, DateTime date, int id)
         {
+            this.OrderID = id;
             this.Customer = customer;
             this.Location = location;
             this.OrderItems = items;
             this.Date = date;
             CalculateTotal();
-        }
-         public Order(ApplicationUser customer, Location location, List<OrderItem> items, DateTime date, int id): this(customer,location,items,date)
-        {
-            this.OrderID = id;
         }
         public override string ToString()
         {
@@ -56,8 +48,7 @@ namespace StoreModels
             _total = 0;
             foreach (var Item in this.OrderItems)
             {
-                //fix this
-                _total += 2 * Item.Quantity;
+                _total += Item.Product.Price * Item.Quantity;
             }
         }
     }

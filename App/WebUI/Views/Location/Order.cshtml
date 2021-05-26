@@ -1,0 +1,72 @@
+@model IEnumerable<StoreModels.OrderItem>
+
+@{
+    ViewData["Title"] = "Order";
+}
+@{TempData["LocationID"]=ViewBag.Location.LocationID;}
+@* @{TempData["OrderItems"]=Model;} *@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Review Order</title>
+</head>
+<body>
+<h1>Review Your Order for @ViewBag.Location.LocationName</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+    <form action="PlaceOrder" method="post">
+        @* <input type="hidden" name="LocationID" id="LocationID" value="@ViewBag.Location.LocationID"> *@
+
+        @Html.AntiForgeryToken()
+        @foreach (var item in Model) {
+            @Html.HiddenFor(modelItem => item.ProductID)
+            
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Price)
+                </td>
+                <td>
+                    @Html.EditorFor(modelItem => item.Quantity)
+                </td>
+                
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Total: $@ViewBag.Total</td>
+
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            @* <td><a asp-action="PlaceOrder" method="post">PlaceOrder</a></td> *@
+            @* <td>@Html.ActionLink("Submit Order", "PlaceOrder")</td> *@
+            <td><input type="Submit" value="PlaceOrder"></td>
+
+        </tr>
+    </form>
+    </tbody>
+</table>
+</body>
+</html>

@@ -61,7 +61,7 @@ namespace Service
         /// <param name="location"></param>
         /// <param name="customer"></param>
         /// <param name="items"></param>
-        public void PlaceOrder(Location location, ApplicationUser customer, List<Item> items);
+        public void PlaceOrder(Order order);
         public void updateItemInStock(InventoryItem item);
         /// <summary>
         /// Calculates Total cost from a list of Items

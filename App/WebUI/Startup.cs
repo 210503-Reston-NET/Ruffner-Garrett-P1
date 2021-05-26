@@ -67,6 +67,11 @@ namespace WebUI
                     opts.SignIn.RequireConfirmedAccount = false;
                 }
             );
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("Owner", policy =>
+                                    policy.RequireClaim("Owner"));
+                });
 
             // services.AddAuthorization(options =>
             // {

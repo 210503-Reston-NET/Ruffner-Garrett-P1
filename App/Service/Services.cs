@@ -153,7 +153,7 @@ namespace Service
            return _repo.GetAllProducts();
         }
 
-        public void PlaceOrder(Location location, ApplicationUser customer, List<Item> items)
+        public void PlaceOrder(Order order)
         {
             // Order order = new Order(customer, location, items);
             // //make sure that location has stock then decrease stock
@@ -161,36 +161,37 @@ namespace Service
             //         //Then call UpdateInventoryItem(Models.Location location, Models.Item item) with each updated item.
             // //This is going to be kinda slow n^2 time :(
             // //Start transaction
-            // _repo.StartTransaction();
-            // try{
-            //     foreach (Item item in items)
-            //     {
-            //         SellItems(location, item);
-            //     }
-            // }catch(Exception ex){
-            //     Log.Error("Could not update stock From order. Rolling back",ex, ex.Message);
-            //     _repo.EndTransaction(false);
-            //     throw new Exception("Not enough of an Item in stock. Order Failed.");
-            // }
-
-            // try{
-            // _repo.PlaceOrder(order);
-            // _repo.EndTransaction(true);
-            // _emailService.SendOrderConfirmationEmail(customer, order);
-            // }catch(Exception ex )
-            // {
-            //     _repo.EndTransaction(false);
-            //     Log.Error("Failed to place order\n{0}\n{1}\n{2}", ex, ex.Message, ex.StackTrace);
-            //     throw new Exception("Order Failed");
-            // }
+            
+             _repo.StartTransaction();
+            try{
+                SellItems(order.LocationID, order.OrderItems);
+            }catch(Exception ex){
+                Log.Error("Could not update stock From order. Rolling back",ex, ex.Message);
+                _repo.EndTransaction(false);
+                throw new Exception("Not enough of an Item in stock. Order Failed.");
+            }
+            Log.Verbose("Adding Order to DB");
+            try{
+            _repo.PlaceOrder(order);
+            _repo.EndTransaction(true);
+            //_emailService.SendOrderConfirmationEmail(customer, order);
+            }catch(Exception ex )
+            {
+                _repo.EndTransaction(false);
+                Log.Error("Failed to place order\n{0}\n{1}\n{2}", ex, ex.Message, ex.StackTrace);
+                throw new Exception("Order Failed");
+            }
         }
-        private void SellItems(Location location, Item oItem)
+        private void SellItems(int LocationID, List<OrderItem> OrderItems)
         {
             //get item from inventory then reduce quantity by specified amount
-            // List<Item> sItems = location.InventoryItems;
-            // Item lItem = sItems.Find(i => i.Product == oItem.Product);
-            // lItem.ChangeQuantity(-oItem.Quantity); 
-            // _repo.UpdateInventoryItem(location, lItem);
+            List<InventoryItem> iis = getInventory(LocationID);
+            foreach (OrderItem item in OrderItems)
+            {
+                InventoryItem i = iis.Find(i => i.ProductID == item.ProductID);
+                i.Quantity = i.Quantity-item.Quantity;
+                _repo.UpdateInventoryItem(i);
+            }
         }
 
         public ApplicationUser SearchCustomers(string name)
