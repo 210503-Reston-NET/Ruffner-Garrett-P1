@@ -18,7 +18,16 @@ variables:
 
 
 steps:
-# Restore buld and test
+
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'Sonar-Cloud-Service'
+      organization: '210503-reston-net'
+      scannerMode: 'MSBuild'
+      projectKey: '210503-Reston-NET_Ruffner-Garrett-P1'
+      projectName: 'Ruffner-Garrett-P1'
+
+# Restore, Build, Test, Deploy
   - task: DotNetCoreCLI@2
     displayName: Restore Project Dependencies
     inputs:
@@ -38,6 +47,11 @@ steps:
       command: 'test'
       projects: '$(solution)'
   
+  - task: SonarCloudAnalyze@1
+    displayName: Run Code Analysis
+  - task: SonarCloudPublish@1
+    displayName: Publish Code Analysis
+  
   - task: DotNetCoreCLI@2
     displayName: Publish
     inputs:
@@ -55,12 +69,3 @@ steps:
       packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
       RuntimeStack: 'DOTNETCORE|5.0'
 
-
-
-# - script: echo Hello, world!
-#   displayName: 'Run a one-line script'
-
-# - script: |
-#     echo Add other tasks to build, test, and deploy your project.
-#     echo See https://aka.ms/yaml
-#   displayName: 'Run a multi-line script'
