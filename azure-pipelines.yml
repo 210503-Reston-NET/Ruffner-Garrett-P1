@@ -12,6 +12,8 @@ variables:
   solution: '**/App/*.sln'
   buildPlatform: 'Any Cpu'
   buildConfiguration: 'Release'
+  solution_main: 'WebUI'
+  solution_roon: 'App'
 
 
 
@@ -42,7 +44,7 @@ steps:
       command: 'publish'
       publishWebProjects: false
       zipAfterPublish: true
-      projects: '$(solution)/$(soulution_main)'
+      projects: '$(solution_root)/$(solution_main)'
 
   - task: AzureRmWebAppDeployment@4
     inputs:
