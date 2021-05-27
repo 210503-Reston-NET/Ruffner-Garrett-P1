@@ -35,8 +35,23 @@ steps:
     inputs:
       command: 'test'
       projects: '$(solution)'
+  
+  - task: DotNetCoreCLI@2
+    displayName: Publish
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      zipAfterPublish: true
+      projects: '$(solution)/$(soulution_main)'
 
-
+  - task: AzureRmWebAppDeployment@4
+    inputs:
+      ConnectionType: 'AzureRM'
+      azureSubscription: 'Azure subscription 1(b9ea6d04-6500-4af6-adfa-84ac2185ff53)'
+      appType: 'webAppLinux'
+      WebAppName: 'watches-n-such'
+      packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+      RuntimeStack: 'DOTNETCORE|5.0'
 
 
 
