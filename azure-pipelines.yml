@@ -8,9 +8,40 @@ trigger:
 
 pool: Default
 
+variables:
+  solution: '**/App/*.sln'
+  buildPlatform: 'Any Cpu'
+  buildConfiguration: 'Release'
+
+
+
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+# Restore buld and test
+  - task: DotNetCoreCLI@2
+    displayName: Restore Project Dependencies
+    inputs:
+      command: 'restore'
+      projects: '$(solution)'
+      feedsToUse: 'select'
+  
+  - task: DotNetCoreCLI@2
+    displayName: Build Projects
+    inputs:
+      command: 'build'
+      projects: '$(soulution)'
+      
+  - task: DotNetCoreCLI@2
+    displayName: Running Tests
+    inputs:
+      command: 'test'
+      projects: '$(solution)'
+
+
+
+
+
+# - script: echo Hello, world!
+#   displayName: 'Run a one-line script'
 
 # - script: |
 #     echo Add other tasks to build, test, and deploy your project.
