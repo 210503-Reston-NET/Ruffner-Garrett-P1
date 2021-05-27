@@ -44,7 +44,7 @@ steps:
       command: 'publish'
       publishWebProjects: false
       zipAfterPublish: true
-      projects: '$(solution_root)/$(solution_main)/*.csproj'
+      projects: 'App/WebUI -c Release -o App/WebUI/publish'
 
   - task: AzureRmWebAppDeployment@4
     inputs:
