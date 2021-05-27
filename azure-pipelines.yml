@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  default: mydockeragent
+  Default: mydockeragent
 
 steps:
 - script: echo Hello, world!
