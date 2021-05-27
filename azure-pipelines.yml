@@ -46,7 +46,13 @@ steps:
     inputs:
       command: 'test'
       projects: '$(solution)'
-  
+      arguments: --configuration $(buildConfiguration) --collect "Code Coverage"
+      
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: '**/corbertura/coverage.xml'
+
   - task: SonarCloudAnalyze@1
     displayName: Run Code Analysis
   - task: SonarCloudPublish@1
