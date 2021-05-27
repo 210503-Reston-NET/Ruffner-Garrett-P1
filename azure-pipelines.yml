@@ -28,7 +28,7 @@ steps:
     displayName: Build Projects
     inputs:
       command: 'build'
-      projects: '$(soulution)/WebUI'
+      projects: '$(solution)'
       
   - task: DotNetCoreCLI@2
     displayName: Running Tests
