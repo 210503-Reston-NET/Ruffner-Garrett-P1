@@ -18,36 +18,7 @@ namespace Service
             _repo = repo;
             _emailService = emailService;
         }
-
-        // public void AddCustomer(string name, string address, string email)
-        // {   
-        //     Log.Debug("Adding new customer: {0}, {1}, {2}", name, address, email);
-        //      MailAddress cEmail = new MailAddress(email);
-        //      Customer newCustomer = new Customer(name,address, email);
-        //     try{
-        //         cEmail = new MailAddress(email);
-        //         newCustomer = new Customer(name, address, email);
-        //     }catch(Exception ex){
-        //         Log.Error("Could not create new customer, {0}\n{1}",ex.Message, ex.StackTrace);
-        //     }
-
-        //     if(CheckForCustomer(newCustomer, _repo.GetAllCustomers()))
-        //     {
-        //         //customer already exists
-        //         Log.Debug("Customer {0} Already exists",newCustomer.Name);
-        //         throw new Exception("Customer Already Exits");
-        //     }
-        //     try{
-        //         _repo.AddCustomer(newCustomer);
-        //         _emailService.SendWelcomeEmail(newCustomer);
-        //     }catch(Exception ex){
-
-        //         Log.Error("Failed to Add Customer. {0}\n{1}",ex.Message, ex.StackTrace);
-        //         throw new Exception("Failed to Add Customer");
-        //     }
-        // }
         
-
         public Location AddLocation(string name, string address, Guid ManagerId)
         {
             Location newLocation = new Location(name, address, ManagerId);
@@ -138,11 +109,6 @@ namespace Service
             return retVal;
         }
 
-        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc)
-        {
-           return _repo.GetOrders(customer, price, asc);
-        }
-
         public List<Order> GetOrders(Location location, bool price, bool asc)
         {
             return _repo.GetOrders(location, price, asc);
@@ -172,8 +138,9 @@ namespace Service
             }
             Log.Verbose("Adding Order to DB");
             try{
-            _repo.PlaceOrder(order);
-            _repo.EndTransaction(true);
+                order.Date = DateTime.Now;
+                _repo.PlaceOrder(order);
+                _repo.EndTransaction(true);
             //_emailService.SendOrderConfirmationEmail(customer, order);
             }catch(Exception ex )
             {
@@ -262,17 +229,6 @@ namespace Service
             return false;
         }
 
-        public double CalculateOrderTotal(List<Item> items)
-        {
-            // double total = 0;
-            // foreach(Item item in items)
-            // {
-            //    total += item.Product.Price * item.Quantity;
-            // }
-            // return total;
-            return 10;
-        }
-
         public List<InventoryItem> getInventory(int LocationID)
         {
            Log.Verbose("Retreiving Inventory of Location {0}",LocationID);
@@ -281,5 +237,9 @@ namespace Service
            return l.InventoryItems;
         }
 
+        public List<Order> GetOrdersByCustomerId(Guid CustomerID)
+        {
+            return _repo.GetOrdersByCustomerID(CustomerID);
+        }
     }
 }

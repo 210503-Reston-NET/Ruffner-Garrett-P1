@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using StoreModels;
 namespace Data
@@ -46,7 +47,7 @@ namespace Data
         /// <param name="price">If True => Sorted by price; False => Sorted by Date</param>
         /// <param name="asc">True => Ascending Order; False => Descending</param>
         /// <returns></returns>
-        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc);
+        public List<Order> GetOrdersByCustomerID(Guid CustomerID);
                 /// <summary>
         /// Gets Orders by Location
         /// </summary>

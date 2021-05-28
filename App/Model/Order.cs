@@ -8,7 +8,7 @@ namespace StoreModels
     /// </summary>
     public class Order
     {
-        public readonly DateTime Date;
+        private  DateTime _Date;
         private double _total;
 
         public Order(Guid CustomerID, int LocationID, int OrderID){
@@ -51,5 +51,6 @@ namespace StoreModels
                 _total += Item.Product.Price * Item.Quantity;
             }
         }
+        public DateTime Date { get=> _Date; set{_Date = value;} }
     }
 }

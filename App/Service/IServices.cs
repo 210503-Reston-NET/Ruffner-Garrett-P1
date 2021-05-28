@@ -52,7 +52,7 @@ namespace Service
         /// <param name="name"></param>
         /// <returns></returns>
         public ApplicationUser SearchCustomers(string name);
-        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc);
+        public List<Order> GetOrdersByCustomerId(Guid CustomerID);
         public List<Order> GetOrders(Location location, bool price, bool asc);
         /// <summary>
         /// Place an order for a customer/locaiton combination
@@ -63,14 +63,6 @@ namespace Service
         /// <param name="items"></param>
         public void PlaceOrder(Order order);
         public void updateItemInStock(InventoryItem item);
-        /// <summary>
-        /// Calculates Total cost from a list of Items
-        /// This is a convienence to avoid creating order objects in the UI
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
-        public double CalculateOrderTotal(List<Item> items);
-
         public List<InventoryItem> getInventory(int LocationId);
 
     }

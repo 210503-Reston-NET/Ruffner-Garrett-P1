@@ -79,42 +79,27 @@ namespace Data
             ).ToList();
         }
 
-        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc)
-        {
-            //OH GOD ITS SO GROSS
-            //SOMEONE HELP ME FIND A BETTER WAY
-            //Had to use client side Evelaution for where clause            
+        public List<Order> GetOrdersByCustomerID(Guid CustomerID)
+        {          
             List<Order> mOrders=  _context.Orders.Select(
-                 order => order
-                //    new Customer(order.Customer.Name, order.Customer.Address,order.Customer.Email, order.Customer.ID),
-                //    new Location(order.Location.LocationName, order.Location.Address),
-                //    order.Items.Select(
-                //        i => new Item(
-                //            new Product(
-                //                i.Product.Name,
-                //                (double) i.Product.Price),
-                //                (int) i.Quantity)).ToList(),
-                // (DateTime) order.Date)
-            ).AsEnumerable().Where(order => order.Customer.Id == customer.Id).ToList();
-
-            Func<Order, double> orderbyprice = order => order.Total;
-            Func<Order, DateTime> orderbydate = order => order.Date;
-            IOrderedEnumerable<Order> temp = null;
-
-            if(price){
-                //order by total
-              temp =  mOrders.OrderBy(orderbyprice);
-            }else{
-                //order by date
-              temp = mOrders.OrderBy(orderbydate);
-            }
-            //Already in ascending order by default. Either reverse it or don't
-            if(!asc){
-                mOrders = temp.Reverse().ToList();
-            }else{
-                mOrders = temp.ToList();
-            }            
-            //return mOrders after results of query have been sorted
+                 order => new Order(){
+                     OrderID = order.OrderID,
+                     CustomerID = order.CustomerID,
+                     LocationID = order.LocationID,
+                     Date = order.Date,
+                     Location = order.Location,
+                     Customer = order.Customer,
+                     OrderItems = _context.OrderItems.Select(
+                         orderitem => new OrderItem(){
+                             OrderID = orderitem.OrderID,
+                             ProductID = orderitem.ProductID,
+                             Quantity = orderitem.Quantity,
+                             Product = orderitem.Product,
+                             Order = orderitem.Order                             
+                         }).Where(o => o.OrderID == order.OrderID).ToList(),
+                     Total = order.Total
+                 }
+            ).AsEnumerable().Where(order => order.CustomerID == CustomerID).ToList();
             return mOrders;         
         }
 
