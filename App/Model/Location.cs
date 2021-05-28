@@ -13,12 +13,6 @@ namespace StoreModels
             InventoryItems  = new List<InventoryItem>();
         }
         
-        // public Location(string locationName, string address)
-        // {
-        //     this.Address = address;
-        //     this.LocationName = locationName;
-        //     InventoryItems  = new List<Item>();
-        // }
          public Location(string locationName, string address, Guid managerId)
         {
             this.Address = address;

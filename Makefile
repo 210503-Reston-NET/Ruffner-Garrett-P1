@@ -20,11 +20,10 @@ test:
 publish:
 	dotnet publish  $(solution_root)/$(solution_main) -c Release -o $(solution_root)/$(solution_main)/publish
 rebuild-db:
-	cd $(solution_dl)
-	dotnet ef database drop -c StoreDBContext --startup-project ../$(solution_root)
-	dotnet ef migrations remove --startup-project ../$(solution_main)
-	dotnet ef migrations add newMigration -c StoreDBContext --startup-project ../$(solution_main)
-	dotnet ef database update newMigration --startup-project ../$(solution_main)
+    #dotnet ef database drop -c StoreDBContext --startup-project ../$(solution_root)
+	cd ./$(solution_dl) && dotnet ef migrations remove --startup-project ../$(solution_main);
+	cd ./$(solution_dl) && dotnet ef migrations add newMigration -c StoreDBContext --startup-project ../$(solution_main);
+	cd ./$(solution_dl) && dotnet ef database update newMigration --startup-project ../$(solution_main)
 clean: clearlogs
 	dotnet clean $(solution_root)
 clearlogs:
