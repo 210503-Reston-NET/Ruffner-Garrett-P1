@@ -88,7 +88,9 @@ namespace Service
                 }
                 product.InventoryItems.Add(ii);
                 location.InventoryItems.Add(ii);
+                product.InventoryItems.Add(ii);
                 _repo.AddProductToInventory(location, ii);
+                Log.Debug("Product added to inventory successfully: productID{0} locationID{1}", ii.ProductID, ii.LocationID);
             }catch(Exception ex){
                 Log.Error("Failed to Add Product To Inventory {0} \n{1}",ex.Message, ex.StackTrace);
                 throw new Exception("Failed to Add product to Inventory");
@@ -161,24 +163,6 @@ namespace Service
             }
         }
 
-        public ApplicationUser SearchCustomers(string name)
-        {
-            Log.Verbose("Searching for Customer: {0}",name);         
-            List<ApplicationUser> customers = GetAllCustomers();
-            
-            foreach (ApplicationUser item in customers)
-            {
-                if(name == item.Name)
-                {
-                    Log.Verbose("Found Customer {0}",item.Name);
-                    return item;
-                }
-            }
-            Log.Verbose("Customer: {name} not found", name);
-            throw new Exception("Customer not found");
-                        
-        }
-
         public void updateItemInStock(InventoryItem item)
         {   
             //Log.Debug("Updating stock of {0} at {1} Qunatity:{2}",item.Product.Name,location.LocationName, amount);
@@ -191,25 +175,12 @@ namespace Service
                 //item.ChangeQuantity(-amount);
             }
         }
-
-        private bool CheckForCustomer(Customer customer, List<Customer> Customers)
-        {
-
-            foreach (Customer item in Customers)
-            {
-                if(customer.Name == item.Name && customer.Address == item.Address && customer.Email == item.Email)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
         private bool CheckForLocations(Location location, List<Location> locations)
         {
 
             foreach (Location item in locations)
             {
-                if((location.LocationName == item.LocationName)&&(location.Address == location.Address))
+                if(location.LocationID == item.LocationID)
                 {
                     return true;
                 }
@@ -221,7 +192,7 @@ namespace Service
         {
             foreach (Product item in products)
             {
-                if(item.Name == product.Name)
+                if(item.ProductID == product.ProductID)
                 {
                     return true;
                 }
@@ -240,6 +211,21 @@ namespace Service
         public List<Order> GetOrdersByCustomerId(Guid CustomerID)
         {
             return _repo.GetOrdersByCustomerID(CustomerID);
+        }
+        public List<Order> GetOrdersByLocationId(int LocationID)
+        {
+            return _repo.GetOrdersByLocationID(LocationID);
+        }
+
+        public Order GetOrder(int OrderID)
+        {
+            try{
+                return _repo.GetOrderByID(OrderID);
+            }catch(Exception ex){
+                Log.Error("Could not get Order with ID: {0}\n{1}", OrderID,ex.Message);
+                return null;
+            }
+
         }
     }
 }

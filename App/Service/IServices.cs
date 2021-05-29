@@ -5,22 +5,7 @@ namespace Service
 {
     public interface IServices
     {
-        // /// <summary>
-        // /// Create a new Customer and add it to the repository
-        // /// </summary>
-        // /// <param name="name"></param>
-        // /// <param name="address"></param>
-        // /// <param name="email"></param>
-        // public void AddCustomer(string name, string address, string email);
-        /// <summary>
-        /// Get Customers From Repo
-        /// </summary>
-        /// <returns></returns>
         public List<ApplicationUser> GetAllCustomers();
-        /// <summary>
-        /// Get Locations From Repo
-        /// </summary>
-        /// <returns></returns>
         public List<Location> GetAllLocations();
         /// <summary>
         /// Get Products From Repo
@@ -46,14 +31,9 @@ namespace Service
         /// <param name="name"></param>
         /// <param name="address"></param>
         public Location AddLocation(string name, string address, Guid managerId);
-        /// <summary>
-        /// Search for a customer by name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public ApplicationUser SearchCustomers(string name);
         public List<Order> GetOrdersByCustomerId(Guid CustomerID);
         public List<Order> GetOrders(Location location, bool price, bool asc);
+        public Order GetOrder(int OrderID);
         /// <summary>
         /// Place an order for a customer/locaiton combination
         /// Also sends a confirmation email to users email addr
@@ -64,6 +44,7 @@ namespace Service
         public void PlaceOrder(Order order);
         public void updateItemInStock(InventoryItem item);
         public List<InventoryItem> getInventory(int LocationId);
+        public List<Order> GetOrdersByLocationId(int LocationID);
 
     }
 }

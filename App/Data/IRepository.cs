@@ -48,6 +48,7 @@ namespace Data
         /// <param name="asc">True => Ascending Order; False => Descending</param>
         /// <returns></returns>
         public List<Order> GetOrdersByCustomerID(Guid CustomerID);
+        public Order GetOrderByID(int OrderID);
                 /// <summary>
         /// Gets Orders by Location
         /// </summary>
@@ -77,8 +78,8 @@ namespace Data
         /// </summary>
         /// <param name="success">True if operation was successful</param>
         public void EndTransaction(bool success);
-
         public Location GetLocationById(int LocationID);
         public Product GetProductById(int ProductID);
+        public List<Order> GetOrdersByLocationID(int LocationID);
     }
 }

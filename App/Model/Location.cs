@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System;
 using System.Globalization;
@@ -35,8 +36,10 @@ namespace StoreModels
         [RequiredAttribute]
         public int LocationID { get; set; }
         [RequiredAttribute]
+        [DisplayNameAttribute("Location Address")]
         public string Address { get; set; }
         [RequiredAttribute]
+        [DisplayNameAttribute("Location Name")]
         public string LocationName { get; set; }
         [RequiredAttribute]
         public List<InventoryItem> InventoryItems { get; set; }
