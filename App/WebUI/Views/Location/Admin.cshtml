@@ -14,7 +14,9 @@
 <body>
 <p>
     @* <a asp-action="AddProduct">Add New Products</a> *@
-    @Html.ActionLink("Add new Product", "AddProduct", new { LocationID = @ViewBag.LocationID })
+    <div> @Html.ActionLink("Add new Product", "AddProduct", new { LocationID = @ViewBag.LocationID })</div>
+   
+    <div>@Html.ActionLink("View Orders", "LocationOrders", "Orders", new{ sortOrder = "Date", LocationID = @Model.FirstOrDefault().LocationID})</div>
     @* <a asp-controller="Location"
        asp-action="AddProduct" 
        asp-route-id="@ViewBag.LocationID">Add New Product</a> *@
@@ -37,30 +39,35 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @* {LocationID}/{ProductID}/{Quantity} *@
-                <form action="@Url.Action("UpdateQuantity","Location")" method="post">
-                    <input type="hidden" name="LocationID" value="@item.LocationID">
-                    <input type="hidden" name="ProductID" value="@item.ProductID">
-                    <input type="number" name="Quantity" min="0" label="New Quantity">
-                    <input type="Submit" value="Update"> 
-                </form>               
-               
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @* {LocationID}/{ProductID}/{Quantity} *@
+                    <form action="@Url.Action("UpdateQuantity","Location")" method="post">
+                        <input type="hidden" name="LocationID" value="@item.LocationID">
+                        <input type="hidden" name="ProductID" value="@item.ProductID">
+                        <input type="number" name="Quantity" min="0" label="New Quantity">
+                        <input type="Submit" value="Update"> 
+                    </form>               
+                    
+                </td>
+            </tr>
+            
+        }
+    
     </tbody>
 </table>
+<p>
+    @Html.ActionLink("Back to Locations List", "Index", "Location")
+</p>
 </body>
 </html>
