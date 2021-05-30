@@ -16,7 +16,7 @@
     @* <a asp-action="AddProduct">Add New Products</a> *@
     <div> @Html.ActionLink("Add new Product", "AddProduct", new { LocationID = @ViewBag.LocationID })</div>
    
-    <div>@Html.ActionLink("View Orders", "LocationOrders", "Orders", new{ sortOrder = "Date", LocationID = @Model.FirstOrDefault().LocationID})</div>
+    <div>@Html.ActionLink("View Orders", "LocationOrders", "Orders", new{ sortOrder = "Date", LocationID = @ViewBag.LocationID})</div>
     @* <a asp-controller="Location"
        asp-action="AddProduct" 
        asp-route-id="@ViewBag.LocationID">Add New Product</a> *@
