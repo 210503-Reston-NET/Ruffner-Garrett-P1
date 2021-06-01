@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using StoreModels;
 using Data;
@@ -46,7 +47,6 @@ namespace Tests
         public void TestProductBeingAdded()
         {
             // var mockRepo = new Mock<IRepository>();
-
             Product c = new Product("My Product", 12.99);
             using (var context = new StoreDBContext(options)){
                 context.Database.EnsureDeleted();
@@ -68,10 +68,7 @@ namespace Tests
                 context.Database.EnsureDeleted();
 
            }
-
         }
-
-        
         
     }
 }

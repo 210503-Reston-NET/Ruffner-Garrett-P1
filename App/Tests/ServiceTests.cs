@@ -261,5 +261,54 @@ namespace Tests
                 Assert.True(7 == ii.Quantity);
             }
         }
+
+        [Fact]
+        //Tests the retrival of all products as well as adding a new product
+        public void TestGetOrderById()
+        {
+            var mockRepo = new Mock<IRepository>();
+            var order = new Order()
+                    {
+                        CustomerID = new ApplicationUser().Id,
+                        OrderID = 1,
+                        LocationID = 1,
+                        OrderItems = new List<OrderItem>()
+                        {
+                            new OrderItem(){
+                                ProductID = 1,
+                                Product = new Product(){
+                                    ProductID = 1,
+                                    Name = "thing",
+                                    Price = 3
+                                },
+                                Quantity = 4
+                            },
+                            new OrderItem(){
+                                ProductID = 2,
+                                Product = new Product(){
+                                    ProductID = 2,
+                                    Name = "otherthing",
+                                    Price = 6
+                                },
+                                Quantity = 2
+                            }
+                        },
+                        Total = 0
+                    };
+            var location = new Location(){
+                LocationID = 1,
+                LocationName = "slad",
+                Address = "flkdf"
+            };
+
+            mockRepo.Setup(x => x.GetOrderByID(1)).Returns(
+                order
+            );
+            var serviceBL = new Services(mockRepo.Object, null);    
+            var result = serviceBL.GetOrder(1);
+
+            Assert.NotNull(serviceBL.GetOrder(1));  
+    
+        }
     }
 }

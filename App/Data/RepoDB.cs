@@ -146,7 +146,7 @@ namespace Data
             //This can probably be done with the ef-core change tracker in the future
             _context.SaveChanges();
             }catch(Exception ex){
-                Log.Error("Could not add order to db {0}\n {1}", ex.StackTrace, ex.Message);
+                Log.Error("Could not add order to db {0}\n {1}\nInner Ex:{2}\n{3}", ex.StackTrace, ex.Message, ex.InnerException.Message, ex.InnerException.StackTrace);
                 throw new Exception("Order Failed");
             }
         }
