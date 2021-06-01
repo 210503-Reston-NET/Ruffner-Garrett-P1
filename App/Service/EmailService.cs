@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Hosting;
 using System.Net.Mail;
 using System.Net;
 
@@ -20,14 +19,11 @@ namespace Service
         //     _smtp = smtp;
         //  }
         private readonly EmailSettings _emailSettings;
-        private readonly IHostingEnvironment _env;
 
-        public EmailService(
-            IOptions<EmailSettings> emailSettings,
-            IHostingEnvironment env)
+        public EmailService(IOptions<EmailSettings> emailSettings)
         {
             _emailSettings = emailSettings.Value;
-            _env = env;
+           
         }
 
 
