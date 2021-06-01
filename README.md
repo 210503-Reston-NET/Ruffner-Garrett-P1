@@ -15,12 +15,12 @@ The Watch Shop is a simple web store that allows anyone to establish a shop fron
  - [x] The manager should be able to replenish inventory
 
 ## Additional requirements:
- - [ ] Exception Handling
- - [ ] Input validation
- - [ ] Logging (useful ones)
- - [ ] At least 20 unit tests:
- - [ ] Use Moq and Sqlite for testing
- - [ ] DB methods should be tested
+ - [x] Exception Handling
+ - [x] Input validation
+ - [x] Logging (useful ones)
+ - [x] At least 20 unit tests:
+ - [x] Use Moq and Sqlite for testing
+ - [x] DB methods should be tested
  - [x] Data should be persisted, (no data should be hard coded)
  - [x] You should use PostgreSQL DB
  - [x] Use code first approach to establish a connection to your DB
