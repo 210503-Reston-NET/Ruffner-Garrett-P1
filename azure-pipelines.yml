@@ -46,13 +46,8 @@ steps:
     inputs:
       command: 'test'
       arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
-
       publishTestResults: true
       projects: '$(solution)'
-
-  # - script: |
-  #     /dotnetglobaltools/reportgenerator -reports:**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
-  #   displayName: 'Create code coverage report'
 
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish code coverage report'
