@@ -73,7 +73,7 @@ steps:
       # summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/*'
       # additionalCodeCoverageFiles: 
       codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/SonarCube.xml'
+      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/SonarQube.xml'
       reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
 
 
