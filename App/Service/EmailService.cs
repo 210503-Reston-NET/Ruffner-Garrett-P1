@@ -13,11 +13,6 @@ namespace Service
 {
     public class EmailService : IEmailSender
     {
-        private readonly SmtpClient _smtp;
-        //  private MailAddress originEmail = new MailAddress("ddaydevtime@gmail.com"); 
-        //  public EmailService(SmtpClient smtp){
-        //     _smtp = smtp;
-        //  }
         private readonly EmailSettings _emailSettings;
 
         public EmailService(IOptions<EmailSettings> emailSettings)
