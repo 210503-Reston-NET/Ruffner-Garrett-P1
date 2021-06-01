@@ -39,7 +39,8 @@ steps:
     inputs:
       command: 'build'
       projects: '$(solution)'
-
+    
+#V2
   - task: DotNetCoreCLI@2
     displayName: 'Run unit tests - $(buildConfiguration)'
     inputs:
@@ -49,17 +50,40 @@ steps:
       publishTestResults: true
       projects: '$(solution)'
 
-  - script: |
-      /dotnetglobaltools/reportgenerator -reports:**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
-    displayName: 'Create code coverage report'
+  # - script: |
+  #     /dotnetglobaltools/reportgenerator -reports:**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+  #   displayName: 'Create code coverage report'
 
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish code coverage report'
     inputs:
       codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/*.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+      summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+      reportDirectory: '$(Build.SourcesDirectory)/App/Tests/' 
+  
+#V1
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Run unit tests - $(buildConfiguration)'
+  #   inputs:
+  #     command: 'test'
+  #     arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
 
+  #     publishTestResults: true
+  #     projects: '$(solution)'
+
+  # - script: |
+  #     /dotnetglobaltools/reportgenerator -reports:**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+  #   displayName: 'Create code coverage report'
+
+  # - task: PublishCodeCoverageResults@1
+  #   displayName: 'Publish code coverage report'
+  #   inputs:
+  #     codeCoverageTool: Cobertura
+  #     summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/*.xml'
+  #     reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+
+
+#V0
   # - task: DotNetCoreCLI@2
   #   displayName: Running Tests
   #   inputs:
