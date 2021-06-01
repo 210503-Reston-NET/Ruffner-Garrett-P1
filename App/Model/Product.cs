@@ -18,10 +18,7 @@ namespace StoreModels
             this.Name = name;
             this.Price = price;
         }
-        // public Product(string name, double price, int id) : this(name, price)
-        // {
-        //     this.ProductID = id;
-        // }
+
         public override string ToString()
         {
             return String.Format("{0}, ${1}",this.Name, this.Price);

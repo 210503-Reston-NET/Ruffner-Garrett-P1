@@ -15,10 +15,17 @@ variables:
   solution_main: 'WebUI'
   solution_root: 'App'
 
-
-
 steps:
-# Restore buld and test
+
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'Sonar-Cloud-Service'
+      organization: '210503-reston-net'
+      scannerMode: 'MSBuild'
+      projectKey: '210503-Reston-NET_Ruffner-Garrett-P1'
+      projectName: 'Ruffner-Garrett-P1'
+
+# Restore, Build, Test, Deploy
   - task: DotNetCoreCLI@2
     displayName: Restore Project Dependencies
     inputs:
@@ -32,11 +39,51 @@ steps:
       command: 'build'
       projects: '$(solution)'
       
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Install ReportGenerator'
+  #   inputs:
+  #     command: custom
+  #     custom: tool
+  #     arguments: 'install --global dotnet-reportgenerator-globaltool'
+
   - task: DotNetCoreCLI@2
-    displayName: Running Tests
+    displayName: 'Run unit tests - $(buildConfiguration)'
     inputs:
       command: 'test'
+      arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+      publishTestResults: true
       projects: '$(solution)'
+    
+  # - script: |
+  #     export PATH="$PATH:$HOME/.dotnet/tools"
+  #   displayName: 'Setup for tools'
+
+  - script: |
+      /dotnetglobaltools/reportgenerator -reports:$(Build.SourcesDirectory)/TestResults/Coverage/* -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+    displayName: 'Create code coverage report'
+
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage report'
+    inputs:
+      codeCoverageTool: 'cobertura'
+      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/*.xml'
+
+  # - task: DotNetCoreCLI@2
+  #   displayName: Running Tests
+  #   inputs:
+  #     command: 'test'
+  #     projects: '$(solution)'
+  #     arguments: --configuration $(buildConfiguration) --collect "Code Coverage"
+  # - task: PublishCodeCoverageResults@1
+  #   displayName: Publish Code Coverage
+  #   inputs:
+  #     codeCoverageTool: 'Cobertura'
+  #     summaryFileLocation: '**/*.coverage'
+
+  - task: SonarCloudAnalyze@1
+    displayName: Run Code Analysis
+  - task: SonarCloudPublish@1
+    displayName: Publish Code Analysis
   
   - task: DotNetCoreCLI@2
     displayName: Publish
@@ -55,12 +102,3 @@ steps:
       packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
       RuntimeStack: 'DOTNETCORE|5.0'
 
-
-
-# - script: echo Hello, world!
-#   displayName: 'Run a one-line script'
-
-# - script: |
-#     echo Add other tasks to build, test, and deploy your project.
-#     echo See https://aka.ms/yaml
-#   displayName: 'Run a multi-line script'

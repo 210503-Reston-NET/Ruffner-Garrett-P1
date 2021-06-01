@@ -1,0 +1,70 @@
+@model IEnumerable<StoreModels.Order>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h1>Orders</h1>
+
+@* <p>
+    <a asp-action="Create">Create New</a>
+</p> *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderID)
+            </th>
+            <th>
+               Customer @Html.DisplayNameFor(model => model.Customer.Name)
+            </th>
+            <th>
+                Shipping Address
+            </th>
+            <th>
+                @Html.ActionLink("Date", "Index", new{ sortOrder = ViewBag.DateSortParm, LocationID=ViewBag.LocationID})
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Location.LocationName)
+            </th>
+            <th>
+                @Html.ActionLink("Total", "Index", new { sortOrder = ViewBag.TotalSortParm, LocationID=ViewBag.LocationID})
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+   
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location.LocationName)
+            </td>            
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "OrderDetails", new { id=item.OrderID, LocationID=ViewBag.LocationID})
+            </td>
+        </tr>
+    
+}
+    </tbody>
+    
+</table>
+<p>
+        @Html.ActionLink("Back to Admin Page", "Admin", "Location", new{ Id = ViewBag.LocationID})
+</p>

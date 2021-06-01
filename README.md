@@ -1,19 +1,17 @@
 # Store App 2.0
-### Into the Web
-
 ## Overview:
-The store app is a software that helps customers purchase products from your business. Designed with functionality that would make virtual shopping much simpler!
+The Watch Shop is a simple web store that allows anyone to establish a shop front and sell their products!
 
 ## Functionality:
  - [x] Add a new customer
- - [ ] Search customers by name
- - [ ] Display details of an order
+ - [x] Search customers by name
+ - [x] Display details of an order
  - [x] Place orders to store locations for customers
- - [ ] View order history of customer
- - [ ] View order history of location
+ - [x] View order history of customer
+ - [x] View order history of location
  - [x] View location inventory
  - [x] The customer should be able to purchase multiple products
- - [ ] Order histories should have the option to be sorted by date (latest to oldest and vice versa) or cost (least expensive to most expensive)
+ - [x] Order histories should have the option to be sorted by date (latest to oldest and vice versa) or cost (least expensive to most expensive)
  - [x] The manager should be able to replenish inventory
 
 ## Additional requirements:
@@ -26,8 +24,8 @@ The store app is a software that helps customers purchase products from your bus
  - [x] Data should be persisted, (no data should be hard coded)
  - [x] You should use PostgreSQL DB
  - [x] Use code first approach to establish a connection to your DB
- - [ ] WebApp should be deployed using Azure App Services
- - [ ] A CI/CD pipeline should be established use Azure Pipelines
+ - [x] WebApp should be deployed using Azure App Services
+ - [x] A CI/CD pipeline should be established use Azure Pipelines
  - [x] Use ASP.NET MVC for the UI
  - [ ] DB structure should be 3NF
  - [ ] Should have an ER Diagram

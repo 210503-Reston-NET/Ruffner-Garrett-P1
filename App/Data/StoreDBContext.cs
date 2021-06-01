@@ -14,36 +14,27 @@ namespace Data
         {
 
         }
-
-        // public DbSet<Customer> Customers { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-
-        //join table for items and inventory
         public DbSet<InventoryItem> InventoryItems { get; set; }
-        
         public DbSet<Product> Products { get; set; }
 
-        // public DbSet<ApplicationUser> Users {get; set;}
-
-        // public DbSet<ApplicationUser> Users { get; set;0}
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Location>().Property(obj => obj.LocationID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Order>().Property(obj => obj.OrderID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Item>().Property(obj => obj.ItemID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Product>().Property(obj => obj.ProductID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<InventoryItem>().HasKey(t => new {t.ProductID, t.LocationID});
-            modelBuilder.Entity<InventoryItem>().HasOne<Location>(l => l.location).WithMany(i => i.InventoryItems).HasForeignKey(j => j.LocationID);
-            modelBuilder.Entity<InventoryItem>().HasOne<Product>(p => p.Product).WithMany(i => i.InventoryItems).HasForeignKey(j => j.ProductID);
+            base.OnModelCreating(builder);
+            builder.Entity<Location>().Property(obj => obj.LocationID).ValueGeneratedOnAdd();
+            builder.Entity<Order>().Property(obj => obj.OrderID).ValueGeneratedOnAdd();
+            builder.Entity<Item>().Property(obj => obj.ItemID).ValueGeneratedOnAdd();
+            builder.Entity<Product>().Property(obj => obj.ProductID).ValueGeneratedOnAdd();
+            
+            builder.Entity<InventoryItem>().HasKey(t => new {t.ProductID, t.LocationID});
+            builder.Entity<InventoryItem>().HasOne<Location>(l => l.location).WithMany(i => i.InventoryItems).HasForeignKey(j => j.LocationID);
+            builder.Entity<InventoryItem>().HasOne<Product>(p => p.Product).WithMany(i => i.InventoryItems).HasForeignKey(j => j.ProductID);
 
-            modelBuilder.Entity<OrderItem>().HasKey(t => new {t.ProductID, t.OrderID});
-            modelBuilder.Entity<OrderItem>().HasOne<Order>(o => o.Order).WithMany(i => i.OrderItems).HasForeignKey(j => j.OrderID);
-            modelBuilder.Entity<OrderItem>().HasOne<Product>(p => p.Product).WithMany(i => i.OrderItems).HasForeignKey(j => j.ProductID);
-            //modelBuilder.Entity<OrderItem>().HasKey(t => new {t.ItemID, t.OrderID});
+            builder.Entity<OrderItem>().HasKey(t => new {t.ProductID, t.OrderID});
+            builder.Entity<OrderItem>().HasOne<Order>(o => o.Order).WithMany(i => i.OrderItems).HasForeignKey(j => j.OrderID);
+            builder.Entity<OrderItem>().HasOne<Product>(p => p.Product).WithMany(i => i.OrderItems).HasForeignKey(j => j.ProductID);
 
            
         }

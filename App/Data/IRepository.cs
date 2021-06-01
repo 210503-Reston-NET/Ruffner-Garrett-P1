@@ -1,14 +1,10 @@
+using System;
 using System.Collections.Generic;
 using StoreModels;
 namespace Data
 {
     public interface IRepository
     {
-        // /// <summary>
-        // /// Add new Customer to Repo
-        // /// </summary>
-        // /// <param name="customer"></param>
-        // public void AddCustomer(Customer customer);
         /// <summary>
         /// Add new Location to Repo
         /// </summary>
@@ -46,7 +42,8 @@ namespace Data
         /// <param name="price">If True => Sorted by price; False => Sorted by Date</param>
         /// <param name="asc">True => Ascending Order; False => Descending</param>
         /// <returns></returns>
-        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc);
+        public List<Order> GetOrdersByCustomerID(Guid CustomerID);
+        public Order GetOrderByID(int OrderID);
                 /// <summary>
         /// Gets Orders by Location
         /// </summary>
@@ -76,8 +73,8 @@ namespace Data
         /// </summary>
         /// <param name="success">True if operation was successful</param>
         public void EndTransaction(bool success);
-
         public Location GetLocationById(int LocationID);
         public Product GetProductById(int ProductID);
+        public List<Order> GetOrdersByLocationID(int LocationID);
     }
 }

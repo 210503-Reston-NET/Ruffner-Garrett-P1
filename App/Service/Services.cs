@@ -10,44 +10,15 @@ namespace Service
 {
     public class Services : IServices
     {
-        private IRepository _repo;
-        private IEmailService _emailService;
+        private readonly IRepository _repo;
+        private readonly IEmailService _emailService;
        
         public Services(IRepository repo, IEmailService emailService)
         {
             _repo = repo;
             _emailService = emailService;
         }
-
-        // public void AddCustomer(string name, string address, string email)
-        // {   
-        //     Log.Debug("Adding new customer: {0}, {1}, {2}", name, address, email);
-        //      MailAddress cEmail = new MailAddress(email);
-        //      Customer newCustomer = new Customer(name,address, email);
-        //     try{
-        //         cEmail = new MailAddress(email);
-        //         newCustomer = new Customer(name, address, email);
-        //     }catch(Exception ex){
-        //         Log.Error("Could not create new customer, {0}\n{1}",ex.Message, ex.StackTrace);
-        //     }
-
-        //     if(CheckForCustomer(newCustomer, _repo.GetAllCustomers()))
-        //     {
-        //         //customer already exists
-        //         Log.Debug("Customer {0} Already exists",newCustomer.Name);
-        //         throw new Exception("Customer Already Exits");
-        //     }
-        //     try{
-        //         _repo.AddCustomer(newCustomer);
-        //         _emailService.SendWelcomeEmail(newCustomer);
-        //     }catch(Exception ex){
-
-        //         Log.Error("Failed to Add Customer. {0}\n{1}",ex.Message, ex.StackTrace);
-        //         throw new Exception("Failed to Add Customer");
-        //     }
-        // }
         
-
         public Location AddLocation(string name, string address, Guid ManagerId)
         {
             Location newLocation = new Location(name, address, ManagerId);
@@ -117,7 +88,9 @@ namespace Service
                 }
                 product.InventoryItems.Add(ii);
                 location.InventoryItems.Add(ii);
+                product.InventoryItems.Add(ii);
                 _repo.AddProductToInventory(location, ii);
+                Log.Debug("Product added to inventory successfully: productID{0} locationID{1}", ii.ProductID, ii.LocationID);
             }catch(Exception ex){
                 Log.Error("Failed to Add Product To Inventory {0} \n{1}",ex.Message, ex.StackTrace);
                 throw new Exception("Failed to Add product to Inventory");
@@ -136,11 +109,6 @@ namespace Service
             List<Location> retVal;
             retVal = _repo.GetAllLocations();
             return retVal;
-        }
-
-        public List<Order> GetOrders(ApplicationUser customer, bool price, bool asc)
-        {
-           return _repo.GetOrders(customer, price, asc);
         }
 
         public List<Order> GetOrders(Location location, bool price, bool asc)
@@ -172,8 +140,9 @@ namespace Service
             }
             Log.Verbose("Adding Order to DB");
             try{
-            _repo.PlaceOrder(order);
-            _repo.EndTransaction(true);
+                order.Date = DateTime.Now;
+                _repo.PlaceOrder(order);
+                _repo.EndTransaction(true);
             //_emailService.SendOrderConfirmationEmail(customer, order);
             }catch(Exception ex )
             {
@@ -194,55 +163,20 @@ namespace Service
             }
         }
 
-        public ApplicationUser SearchCustomers(string name)
-        {
-            Log.Verbose("Searching for Customer: {0}",name);         
-            List<ApplicationUser> customers = GetAllCustomers();
-            
-            foreach (ApplicationUser item in customers)
-            {
-                if(name == item.Name)
-                {
-                    Log.Verbose("Found Customer {0}",item.Name);
-                    return item;
-                }
-            }
-            Log.Verbose("Customer: {name} not found", name);
-            throw new Exception("Customer not found");
-                        
-        }
-
         public void updateItemInStock(InventoryItem item)
         {   
-            //Log.Debug("Updating stock of {0} at {1} Qunatity:{2}",item.Product.Name,location.LocationName, amount);
-            //item.ChangeQuantity(amount);
             try{
                 _repo.UpdateInventoryItem(item);
-                //_repo.UpdateLocation(location);
             }catch(Exception ex){
                 Log.Error("Could not update inventory at Location",ex, ex.Message);
-                //item.ChangeQuantity(-amount);
             }
-        }
-
-        private bool CheckForCustomer(Customer customer, List<Customer> Customers)
-        {
-
-            foreach (Customer item in Customers)
-            {
-                if(customer.Name == item.Name && customer.Address == item.Address && customer.Email == item.Email)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
         private bool CheckForLocations(Location location, List<Location> locations)
         {
 
             foreach (Location item in locations)
             {
-                if((location.LocationName == item.LocationName)&&(location.Address == location.Address))
+                if(location.LocationID == item.LocationID)
                 {
                     return true;
                 }
@@ -254,23 +188,12 @@ namespace Service
         {
             foreach (Product item in products)
             {
-                if(item.Name == product.Name)
+                if(item.ProductID == product.ProductID)
                 {
                     return true;
                 }
             }
             return false;
-        }
-
-        public double CalculateOrderTotal(List<Item> items)
-        {
-            // double total = 0;
-            // foreach(Item item in items)
-            // {
-            //    total += item.Product.Price * item.Quantity;
-            // }
-            // return total;
-            return 10;
         }
 
         public List<InventoryItem> getInventory(int LocationID)
@@ -281,5 +204,24 @@ namespace Service
            return l.InventoryItems;
         }
 
+        public List<Order> GetOrdersByCustomerId(Guid CustomerID)
+        {
+            return _repo.GetOrdersByCustomerID(CustomerID);
+        }
+        public List<Order> GetOrdersByLocationId(int LocationID)
+        {
+            return _repo.GetOrdersByLocationID(LocationID);
+        }
+
+        public Order GetOrder(int OrderID)
+        {
+            try{
+                return _repo.GetOrderByID(OrderID);
+            }catch(Exception ex){
+                Log.Error("Could not get Order with ID: {0}\n{1}", OrderID,ex.Message);
+                return null;
+            }
+
+        }
     }
 }
