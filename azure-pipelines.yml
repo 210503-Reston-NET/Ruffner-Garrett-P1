@@ -49,7 +49,7 @@ steps:
       projects: '$(solution)'
 
   - script: |
-      /dotnetglobaltools/reportgenerator -reports:**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+      /dotnetglobaltools/reportgenerator -reports:**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
     displayName: 'Create code coverage report'
 
   - task: PublishCodeCoverageResults@1
