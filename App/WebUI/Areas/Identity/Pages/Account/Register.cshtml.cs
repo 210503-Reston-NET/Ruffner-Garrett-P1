@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -52,6 +53,15 @@ namespace WebUI.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Full name")]
+            public string Name { get; set; }
+
+            [Required]
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+
+            [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -75,8 +85,9 @@ namespace WebUI.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { UserName = Input.Email, Name = Input.Name, Address = Input.Address, Email = Input.Email};
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                await _userManager.AddClaimAsync(user,new Claim("Name", user.Name));
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
