@@ -28,15 +28,6 @@ for details on configuring this project to bundle and minify static web assets. 
 
   --light1: #ebdbb2;
 }
-/* .colors{
-  neutral_red: #cc241d;
-  neutral_green: #98971a;
-  neutral_yellow: #d79921;
-  neutral_blue : #458588;
-  neutral_purple: #b16286;
-  neutral_aqua : #689d6a;
-  neutral_orange: #d65d0e;
-} */
 
 a.navbar-brand {
   white-space: normal;
@@ -54,6 +45,10 @@ a {
 .border-bottom-dark{
   border-bottom: 1px solid var(--dark0);
 }
+.border-top-dark{
+  border-top: 1px solid var(--dark0);
+}
+
 
 .text-gruv-nav{
   color: var(--neutral_blue)
