@@ -45,7 +45,7 @@ steps:
     displayName: 'Run unit tests - $(buildConfiguration)'
     inputs:
       command: 'test'
-      arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\"" /p:ExcludeFromCoverage="$(Build.SourcesDirectory)/App/Data/Migrations"'
+      arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\"" /p:ExcludeFromCoverage="$(Build.SourcesDirectory)/App/Data/Migrations/*"'
       publishTestResults: true
       projects: '$(solution)'
 
