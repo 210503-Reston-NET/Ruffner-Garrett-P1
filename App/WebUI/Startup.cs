@@ -53,7 +53,7 @@ namespace WebUI
             services.Configure<IdentityOptions>(opts => 
                 {
                     opts.User.RequireUniqueEmail = true;
-                    opts.SignIn.RequireConfirmedAccount = true;
+                    opts.SignIn.RequireConfirmedAccount = false;
                 }
             );
             services.AddAuthorization(options =>
