@@ -213,5 +213,53 @@ namespace Tests
                 Assert.True(1 == locations[0].InventoryItems.Count);
             }
         }
+
+        [Fact]
+        public void UpdateStockTest(){
+            
+            Location c = new Location(){LocationName = "name", Address="address"};
+            using (var context = new StoreDBContext(options)){
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+                IServices service = new Services(new RepoDB(context), null);
+                
+                service.AddLocation("name", "alksdjf", new Guid());
+                service.AddProduct("my product", 10);               
+            }
+
+            // add to inventory
+            using (var context = new StoreDBContext(options)){
+            IServices service = new Services(new RepoDB(context), null);
+               var products =  service.GetAllProducts();
+               var locations = service.GetAllLocations();
+               Assert.NotEmpty(locations);
+               Assert.True(locations.Count ==1);
+               Assert.True(1==products.Count);
+               //get location and product ID
+               int pid = products[0].ProductID;
+               int lid = locations[0].LocationID;
+
+               service.AddProductToInventory(lid,pid, 3);
+               
+            }
+
+            //update inventory
+            using (var context = new StoreDBContext(options)){
+                IServices service = new Services(new RepoDB(context), null); 
+                var locations = service.GetAllLocations();
+                var ii = locations[0].InventoryItems[0];
+                int before = ii.Quantity;
+                ii.Quantity = before +4;
+                service.updateItemInStock(ii);
+            }
+
+            //ensure updated
+            using (var context = new StoreDBContext(options)){
+                IServices service = new Services(new RepoDB(context), null); 
+                var locations = service.GetAllLocations();
+                var ii = locations[0].InventoryItems[0];
+                Assert.True(7 == ii.Quantity);
+            }
+        }
     }
 }

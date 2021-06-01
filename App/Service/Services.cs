@@ -171,7 +171,7 @@ namespace Service
 
             foreach (Location item in locations)
             {
-                if(location.LocationID == item.LocationID)
+                if(location.LocationName == item.LocationName)
                 {
                     return true;
                 }
@@ -183,7 +183,7 @@ namespace Service
         {
             foreach (Product item in products)
             {
-                if(item.ProductID == product.ProductID)
+                if(item.Name == product.Name)
                 {
                     return true;
                 }

@@ -9,6 +9,5 @@ namespace StoreModels
         public string Name {get; set;}
         [PersonalData]
         public string Address {get; set;}
-        public string CustomTag { get; set; }
     }
 }
