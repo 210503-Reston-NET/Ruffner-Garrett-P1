@@ -24,6 +24,7 @@ steps:
       scannerMode: 'MSBuild'
       projectKey: '210503-Reston-NET_Ruffner-Garrett-P1'
       projectName: 'Ruffner-Garrett-P1'
+      extraProperties: 'sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml'
 
 # Restore, Build, Test, Deploy
   - task: DotNetCoreCLI@2
