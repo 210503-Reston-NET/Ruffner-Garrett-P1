@@ -9,26 +9,26 @@
 {
     @* UserManager.GetUserName(User) *@
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(User.FindFirst("Name")?.Value ?? UserManager.GetUserName(User))!</a>
+        <a id="manage" class="nav-link text-gruv-nav" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(User.FindFirst("Name")?.Value ?? UserManager.GetUserName(User))!</a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn text-dark">Logout</button>
+            <button id="logout" type="submit" class="nav-link btn text-gruv-nav">Logout</button>
             @* btn btn-link *@
         </form>
     </li>
     <li class="nav-item">
-         <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">My Orders</a>
+         <a class="nav-link text-gruv-nav" asp-area="" asp-controller="Orders" asp-action="Index">My Orders</a>
         @* <a class="nav-link text-dark" id="viewOrders" asp-controller="Orders" >My Orders</a> *@
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link text-gruv-nav" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="nav-link text-gruv-nav" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
 }
 </ul>
