@@ -1,12 +1,7 @@
-using System.Net.Mail;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using StoreModels;
 using Data;
-
-
 using Xunit;
-
 using System.Collections.Generic;
 using Moq;
 using System;
@@ -31,7 +26,6 @@ namespace Tests
                 context.Database.EnsureCreated();
                 IRepository _repo = new RepoDB(context);
                 _repo.AddLocation(c);
-                
            
             }
             //Using a new context check for Location
@@ -77,48 +71,7 @@ namespace Tests
 
         }
 
-        [Fact]
-        public void AddToInventoryTest(){
-            //Create Location
-
-            Location c = new Location(){LocationName = "name", Address="address"};
-            using (var context = new StoreDBContext(options)){
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-                IServices service = new Services(new RepoDB(context), null);
-                
-                service.AddLocation("name", "alksdjf", new Guid());
-                service.AddProduct("my product", 10);               
-            }
-            
-            //Create Product
-            Product p = new Product("My Product", 12.99);
-            using (var context = new StoreDBContext(options)){
-            IServices service = new Services(new RepoDB(context), null);
-               var products =  service.GetAllProducts();
-               var locations = service.GetAllLocations();
-               Assert.NotEmpty(locations);
-               Assert.True(locations.Count ==1);
-               Assert.True(1==products.Count);
-               //get location and product ID
-               int pid = products[0].ProductID;
-               int lid = locations[0].LocationID;
-
-               service.AddProductToInventory(lid,pid, 0);
-               
-            }
-
-            using (var context = new StoreDBContext(options)){
-                IServices service = new Services(new RepoDB(context), null); 
-                var locations = service.GetAllLocations();
-                Assert.True(1 == locations[0].InventoryItems.Count);
-            }
-
-           
-
-
-
-        }
+        
         
     }
 }

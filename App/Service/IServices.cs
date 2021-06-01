@@ -32,7 +32,6 @@ namespace Service
         /// <param name="address"></param>
         public Location AddLocation(string name, string address, Guid managerId);
         public List<Order> GetOrdersByCustomerId(Guid CustomerID);
-        public List<Order> GetOrders(Location location, bool price, bool asc);
         public Order GetOrder(int OrderID);
         /// <summary>
         /// Place an order for a customer/locaiton combination

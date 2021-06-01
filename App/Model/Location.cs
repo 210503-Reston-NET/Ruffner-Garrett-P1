@@ -21,14 +21,7 @@ namespace StoreModels
             this.UserId = managerId;
             InventoryItems  = new List<InventoryItem>();
         }
-        public Location(string locationName, string address, Guid managerId, List<InventoryItem> inventory, int id )
-        {
-            this.Address = address;
-            this.LocationName = locationName;
-            this.InventoryItems  = inventory;
-            this.UserId = managerId;
-            this.LocationID = id;
-        }
+        
         public override string ToString()
         {
             return String.Format("{0} Address: {1}",this.LocationName,this.Address);

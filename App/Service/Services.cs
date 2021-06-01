@@ -111,11 +111,6 @@ namespace Service
             return retVal;
         }
 
-        public List<Order> GetOrders(Location location, bool price, bool asc)
-        {
-            return _repo.GetOrders(location, price, asc);
-        }
-
         public List<Product> GetAllProducts()
         {
            return _repo.GetAllProducts();
