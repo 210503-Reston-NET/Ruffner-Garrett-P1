@@ -30,7 +30,6 @@ namespace Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Address = table.Column<string>(type: "text", nullable: true),
-                    CustomTag = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -240,26 +239,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Item",
-                columns: table => new
-                {
-                    ItemID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductID = table.Column<int>(type: "integer", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Item", x => x.ItemID);
-                    table.ForeignKey(
-                        name: "FK_Item_Products_ProductID",
-                        column: x => x.ProductID,
-                        principalTable: "Products",
-                        principalColumn: "ProductID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
@@ -327,11 +306,6 @@ namespace Data.Migrations
                 column: "LocationID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Item_ProductID",
-                table: "Item",
-                column: "ProductID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderID",
                 table: "OrderItems",
                 column: "OrderID");
@@ -366,9 +340,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "InventoryItems");
-
-            migrationBuilder.DropTable(
-                name: "Item");
 
             migrationBuilder.DropTable(
                 name: "OrderItems");

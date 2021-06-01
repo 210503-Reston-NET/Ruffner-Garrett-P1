@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(StoreDBContext))]
-    [Migration("20210528021356_newMigration")]
+    [Migration("20210601235500_newMigration")]
     partial class newMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,9 +168,6 @@ namespace Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("CustomTag")
-                        .HasColumnType("text");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -242,26 +239,6 @@ namespace Data.Migrations
                     b.HasIndex("LocationID");
 
                     b.ToTable("InventoryItems");
-                });
-
-            modelBuilder.Entity("StoreModels.Item", b =>
-                {
-                    b.Property<int>("ItemID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ItemID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("Item");
                 });
 
             modelBuilder.Entity("StoreModels.Location", b =>
@@ -417,17 +394,6 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("location");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("StoreModels.Item", b =>
-                {
-                    b.HasOne("StoreModels.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Product");
                 });
