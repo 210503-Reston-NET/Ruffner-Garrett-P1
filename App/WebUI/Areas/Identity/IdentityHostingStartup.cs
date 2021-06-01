@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebUI.Models;
+using StoreModels;
 
 [assembly: HostingStartup(typeof(WebUI.Areas.Identity.IdentityHostingStartup))]
 namespace WebUI.Areas.Identity
@@ -16,7 +16,6 @@ namespace WebUI.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                // services.AddDefaultIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<StoreDBContext>().AddDefaultTokenProviders();
             });
         }
     }

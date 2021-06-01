@@ -11,12 +11,12 @@ namespace Service
     public class Services : IServices
     {
         private readonly IRepository _repo;
-        private readonly IEmailService _emailService;
+        // private readonly IEmailService _emailService;
        
-        public Services(IRepository repo, IEmailService emailService)
+        public Services(IRepository repo)// emailService)
         {
             _repo = repo;
-            _emailService = emailService;
+            // _emailService = emailService;
         }
         
         public Location AddLocation(string name, string address, Guid ManagerId)

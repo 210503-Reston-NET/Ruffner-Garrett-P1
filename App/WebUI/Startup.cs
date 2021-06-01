@@ -1,31 +1,19 @@
-using System.Reflection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Data;
 using Service;
-using System.Net.Mail;
-using System.Net;
 using Serilog;
-using WebUI.Models;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using StoreModels;
-using Microsoft.AspNetCore.Authorization;
-
-
+using Microsoft.AspNetCore.Identity.UI.Services;
 namespace WebUI
 {
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -38,18 +26,19 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var smtpClient = new SmtpClient(Configuration["Smtp:Host"])
-            {
-                Port = int.Parse(Configuration["Smtp:Port"]),
-                Credentials = new NetworkCredential(Configuration["Smtp:Username"], Configuration["Smtp:Password"]),
-                EnableSsl = true,
-            };
+            // var smtpClient = new SmtpClient(Configuration["Smtp:Host"])
+            // {
+            //     Port = int.Parse(Configuration["Smtp:Port"]),
+            //     Credentials = new NetworkCredential(Configuration["Smtp:Username"], Configuration["Smtp:Password"]),
+            //     EnableSsl = true,
+            // };
             services.AddDbContext<StoreDBContext>(options =>options.UseNpgsql(parseElephantSQLURL(this.Configuration.GetConnectionString("StoreDB"))));
             
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<IRepository, RepoDB>();
-            services.AddSingleton<IEmailService>( new EmailService(smtpClient));
+            services.Configure<EmailSettings>(Configuration.GetSection("Smtp"));
+            services.AddSingleton<IEmailSender, EmailService>();//new EmailService(smtpClient));
             // services.AddScoped<IAuthorizationHandler, OwnerAuthorizationHandler>();
             services.AddScoped<IServices, Services>();
             //this crashes the program
@@ -63,8 +52,8 @@ namespace WebUI
             
             services.Configure<IdentityOptions>(opts => 
                 {
-                    opts.User.RequireUniqueEmail = false;
-                    opts.SignIn.RequireConfirmedAccount = false;
+                    opts.User.RequireUniqueEmail = true;
+                    opts.SignIn.RequireConfirmedAccount = true;
                 }
             );
             services.AddAuthorization(options =>

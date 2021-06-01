@@ -28,7 +28,7 @@ namespace Tests
             using (var context = new StoreDBContext(options)){
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                IServices service = new Services(new RepoDB(context), null);
+                IServices service = new Services(new RepoDB(context));
                 
                 service.AddLocation("name", "alksdjf", new Guid());
                 service.AddProduct("my product", 10);               
@@ -37,7 +37,7 @@ namespace Tests
             //Create Product
             Product p = new Product("My Product", 12.99);
             using (var context = new StoreDBContext(options)){
-            IServices service = new Services(new RepoDB(context), null);
+            IServices service = new Services(new RepoDB(context));
                var products =  service.GetAllProducts();
                var locations = service.GetAllLocations();
                Assert.NotEmpty(locations);
@@ -52,7 +52,7 @@ namespace Tests
             }
 
             using (var context = new StoreDBContext(options)){
-                IServices service = new Services(new RepoDB(context), null); 
+                IServices service = new Services(new RepoDB(context)); 
                 var locations = service.GetAllLocations();
                 Assert.True(1 == locations[0].InventoryItems.Count);
             }
@@ -66,7 +66,7 @@ namespace Tests
             using (var context = new StoreDBContext(options)){
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                IServices service = new Services(new RepoDB(context), null);
+                IServices service = new Services(new RepoDB(context));
                 
                 service.AddLocation("name", "alksdjf", new Guid());
                 service.AddProduct("my product", 10);  
@@ -84,7 +84,7 @@ namespace Tests
             
             //Add order            
             using (var context = new StoreDBContext(options)){
-            IServices service = new Services(new RepoDB(context), null);
+            IServices service = new Services(new RepoDB(context));
                 var products =  service.GetAllProducts();
                 var locations = service.GetAllLocations();
                 Assert.NotEmpty(locations);
@@ -125,7 +125,7 @@ namespace Tests
 
                 );
             //Build a Service object
-            var serviceBL = new Services(mockRepo.Object, null);
+            var serviceBL = new Services(mockRepo.Object);
 
             //Act
             var result = serviceBL.GetAllCustomers();
@@ -169,7 +169,7 @@ namespace Tests
                     }
 
                 );
-            var serviceBL = new Services(mockRepo.Object, null);    
+            var serviceBL = new Services(mockRepo.Object);    
             var result = serviceBL.GetOrder(1);
             Assert.Equal(1, result.LocationID);
             Assert.Equal(24, result.Total);
@@ -183,7 +183,7 @@ namespace Tests
             using (var context = new StoreDBContext(options)){
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                IServices service = new Services(new RepoDB(context), null);
+                IServices service = new Services(new RepoDB(context));
                 
                 service.AddLocation("name", "alksdjf", new Guid());
                 service.AddProduct("my product", 10);               
@@ -192,7 +192,7 @@ namespace Tests
             //Create Product
             Product p = new Product("My Product", 12.99);
             using (var context = new StoreDBContext(options)){
-            IServices service = new Services(new RepoDB(context), null);
+            IServices service = new Services(new RepoDB(context));
                var products =  service.GetAllProducts();
                var locations = service.GetAllLocations();
                Assert.NotEmpty(locations);
@@ -208,7 +208,7 @@ namespace Tests
             }
 
             using (var context = new StoreDBContext(options)){
-                IServices service = new Services(new RepoDB(context), null); 
+                IServices service = new Services(new RepoDB(context)); 
                 var locations = service.GetAllLocations();
                 Assert.True(1 == locations[0].InventoryItems.Count);
             }
@@ -221,7 +221,7 @@ namespace Tests
             using (var context = new StoreDBContext(options)){
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                IServices service = new Services(new RepoDB(context), null);
+                IServices service = new Services(new RepoDB(context));
                 
                 service.AddLocation("name", "alksdjf", new Guid());
                 service.AddProduct("my product", 10);               
@@ -229,7 +229,7 @@ namespace Tests
 
             // add to inventory
             using (var context = new StoreDBContext(options)){
-            IServices service = new Services(new RepoDB(context), null);
+            IServices service = new Services(new RepoDB(context));
                var products =  service.GetAllProducts();
                var locations = service.GetAllLocations();
                Assert.NotEmpty(locations);
@@ -245,7 +245,7 @@ namespace Tests
 
             //update inventory
             using (var context = new StoreDBContext(options)){
-                IServices service = new Services(new RepoDB(context), null); 
+                IServices service = new Services(new RepoDB(context)); 
                 var locations = service.GetAllLocations();
                 var ii = locations[0].InventoryItems[0];
                 int before = ii.Quantity;
@@ -255,7 +255,7 @@ namespace Tests
 
             //ensure updated
             using (var context = new StoreDBContext(options)){
-                IServices service = new Services(new RepoDB(context), null); 
+                IServices service = new Services(new RepoDB(context)); 
                 var locations = service.GetAllLocations();
                 var ii = locations[0].InventoryItems[0];
                 Assert.True(7 == ii.Quantity);
@@ -304,11 +304,33 @@ namespace Tests
             mockRepo.Setup(x => x.GetOrderByID(1)).Returns(
                 order
             );
-            var serviceBL = new Services(mockRepo.Object, null);    
+            var serviceBL = new Services(mockRepo.Object);    
             var result = serviceBL.GetOrder(1);
 
             Assert.NotNull(serviceBL.GetOrder(1));  
     
+        }
+
+
+        [Fact]
+        public void itemgreaterthanzero(){
+            
+            var order = new InventoryItem()
+                {                        
+                    ProductID = 1,
+                    Product = new Product(){
+                        ProductID = 1,
+                        Name = "thing",
+                        Price = 3
+                    },
+                    Quantity = 5                        
+                };
+           
+
+           
+            Assert.Throws<Exception>(()=> order.Quantity = -3);
+
+            
         }
     }
 }
