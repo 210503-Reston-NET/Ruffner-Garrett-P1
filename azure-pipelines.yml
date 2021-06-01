@@ -15,8 +15,6 @@ variables:
   solution_main: 'WebUI'
   solution_root: 'App'
 
-
-
 steps:
 
   - task: SonarCloudPrepare@1
@@ -47,11 +45,11 @@ steps:
       command: 'test'
       projects: '$(solution)'
       arguments: --configuration $(buildConfiguration) --collect "Code Coverage"
-      
   - task: PublishCodeCoverageResults@1
+    displayName: Publish Code Coverage
     inputs:
       codeCoverageTool: 'Cobertura'
-      summaryFileLocation: '**/corbertura/coverage.xml'
+      summaryFileLocation: '**/cobertura/coverage.xml'
 
   - task: SonarCloudAnalyze@1
     displayName: Run Code Analysis
