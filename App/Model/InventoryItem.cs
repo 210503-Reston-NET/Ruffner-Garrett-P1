@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace StoreModels
 {
@@ -9,6 +10,7 @@ namespace StoreModels
     /// </summary>
     public class InventoryItem
     {
+        [Range(0,int.MaxValue)]
         private int _quantity;
 
         public InventoryItem(){
@@ -23,6 +25,7 @@ namespace StoreModels
         public Product Product { get; set; }
 
         [DisplayName("Quantity")]
+        [Range(0,int.MaxValue)]
         public int Quantity 
         {
             get => _quantity; 

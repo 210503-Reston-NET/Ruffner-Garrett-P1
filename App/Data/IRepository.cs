@@ -5,11 +5,6 @@ namespace Data
 {
     public interface IRepository
     {
-        // /// <summary>
-        // /// Add new Customer to Repo
-        // /// </summary>
-        // /// <param name="customer"></param>
-        // public void AddCustomer(Customer customer);
         /// <summary>
         /// Add new Location to Repo
         /// </summary>
