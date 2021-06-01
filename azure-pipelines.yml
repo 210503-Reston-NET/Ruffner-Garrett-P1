@@ -53,6 +53,10 @@ steps:
       arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
       publishTestResults: true
       projects: '$(solution)'
+    
+  - script: |
+      export PATH="$PATH:$HOME/.dotnet/tools"
+    displayName: 'Setup for tools'
 
   - script: |
       reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
