@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -34,15 +33,6 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Full name")]
-            public string Name { get; set; }
-
-            [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Address")]
-            public string Address { get; set; }
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -57,8 +47,6 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                Name = user.Name,
-                Address = user.Address,
                 PhoneNumber = phoneNumber
             };
         }
@@ -99,15 +87,6 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
-            if (Input.Name != user.Name){
-                await _userManager.RemoveClaimAsync(user, new Claim("Name", user.Name));
-                user.Name = Input.Name;
-                await _userManager.AddClaimAsync(user,new Claim("Name", user.Name));
-            }
-            if(Input.Address != user.Address){
-                user.Address = Input.Address;
-            }
-            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
