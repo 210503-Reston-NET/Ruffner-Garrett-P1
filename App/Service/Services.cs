@@ -10,8 +10,8 @@ namespace Service
 {
     public class Services : IServices
     {
-        private IRepository _repo;
-        private IEmailService _emailService;
+        private readonly IRepository _repo;
+        private readonly IEmailService _emailService;
        
         public Services(IRepository repo, IEmailService emailService)
         {
@@ -165,14 +165,10 @@ namespace Service
 
         public void updateItemInStock(InventoryItem item)
         {   
-            //Log.Debug("Updating stock of {0} at {1} Qunatity:{2}",item.Product.Name,location.LocationName, amount);
-            //item.ChangeQuantity(amount);
             try{
                 _repo.UpdateInventoryItem(item);
-                //_repo.UpdateLocation(location);
             }catch(Exception ex){
                 Log.Error("Could not update inventory at Location",ex, ex.Message);
-                //item.ChangeQuantity(-amount);
             }
         }
         private bool CheckForLocations(Location location, List<Location> locations)

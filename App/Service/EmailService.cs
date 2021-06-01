@@ -11,7 +11,7 @@ namespace Service
 {
     public class EmailService : IEmailService
     {
-         private SmtpClient _smtp;
+         private readonly SmtpClient _smtp;
          private MailAddress originEmail = new MailAddress("ddaydevtime@gmail.com"); 
          public EmailService(SmtpClient smtp){
             _smtp = smtp;

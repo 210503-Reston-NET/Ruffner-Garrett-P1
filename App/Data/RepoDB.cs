@@ -10,7 +10,7 @@ namespace Data
 {
     public class RepoDB : IRepository
     {
-        private StoreDBContext _context;
+        private readonly StoreDBContext _context;
         public RepoDB(StoreDBContext context)
         {
             _context = context;
@@ -45,6 +45,8 @@ namespace Data
             _context.ChangeTracker.Clear();
             _context.InventoryItems.Add(item);
             _context.Locations.Update(location);
+            _context.Entry(item).GetDatabaseValues();
+            _context.Entry(location).GetDatabaseValues();
             _context.SaveChanges();
         }
 
@@ -84,7 +86,7 @@ namespace Data
 
         public List<Order> GetOrdersByCustomerID(Guid CustomerID)
         {          
-            List<Order> mOrders=  _context.Orders.Select(
+            List<Order> order=  _context.Orders.Select(
                 order => new Order(){
                     OrderID = order.OrderID,
                     CustomerID = order.CustomerID,
@@ -104,23 +106,13 @@ namespace Data
                     
                 }
             ).Where(order => order.CustomerID == CustomerID).ToList();
-            return mOrders;         
+            return order;         
         }
 
         public List<Order> GetOrders(Location location, bool price, bool asc)
         {
-            List<Order> mOrders=  _context.Orders.Select(
+            List<Order> order=  _context.Orders.Select(
                 order => order
-               
-                //    new Customer(order.Customer.Name, order.Customer.Address, order.Customer.Email, order.Customer.ID),
-                //    new Location(order.Location.LocationName, order.Location.Address),
-                //    order.Items.Select(
-                //        i => new Item(
-                //            new Product(
-                //                i.Product.Name,
-                //                (double) i.Product.Price),
-                //                (int) i.Quantity)).ToList(),
-                // (DateTime) order.Date)
             ).AsEnumerable().Where(order => order.Location.LocationID == location.LocationID).ToList();
 
             Func<Order, double> orderbyprice = order => order.Total;
@@ -129,19 +121,19 @@ namespace Data
             IOrderedEnumerable<Order> temp = null;
             if(price){
                 //order by total
-              temp =  mOrders.OrderBy(orderbyprice);
+              temp =  order.OrderBy(orderbyprice);
             }else{
                 //order by date
-              temp = mOrders.OrderBy(orderbydate);
+              temp = order.OrderBy(orderbydate);
             }
             //Already in ascending order by default. Either reverse it or don't
             if(!asc){
-                mOrders = temp.Reverse().ToList();
+                order = temp.Reverse().ToList();
             }else{
-                mOrders = temp.ToList();
+                order = temp.ToList();
             }            
-            //return mOrders after results of query have been sorted
-            return mOrders;
+            //return order after results of query have been sorted
+            return order;
         }
         
        
@@ -179,7 +171,6 @@ namespace Data
         {
             Log.Verbose("Retrieving Locaiton by Id: {0}", LocationID);
             var locations = this.GetAllLocations();
-            //locations.ForEach(l => l.InventoryItems.ForEach(i => Log.Verbose("id: {0} Quantity: {1}",i.ProductID,  i.Quantity)));
             Location found =  locations.Where(l => l.LocationID == LocationID).FirstOrDefault();
             Log.Verbose("Location Found {0}", found.LocationName);
             return found;
@@ -192,23 +183,6 @@ namespace Data
                    Name = p.Name,
                    Price = p.Price,
                    ProductID = p.ProductID,
-                //    OrderItems = _context.OrderItems.Select(
-                //         orderitem => new OrderItem(){
-                //             OrderID = orderitem.OrderID,
-                //             ProductID = orderitem.ProductID,
-                //             Quantity = orderitem.Quantity,
-                //             Product = orderitem.Product,
-                //             Order = orderitem.Order                             
-                //         }).Where(o => o.ProductID == p.ProductID).ToList(),
-                //     InventoryItems = _context.InventoryItems.Select(
-                //         i => new InventoryItem(){
-                //             LocationID = i.LocationID,
-                //             location = i.location,
-                //             ProductID = i.ProductID,
-                //             Product = i.Product,
-                //             Quantity = i.Quantity
-                //         }).Where(i => i.ProductID == p.ProductID).ToList()
-
                }
                ).FirstOrDefault(o => o.ProductID == ProductID);
            return found;
@@ -247,7 +221,7 @@ namespace Data
         }
 
         public List<Order> GetOrdersByLocationID(int LocationID){
-            List<Order> mOrders=  _context.Orders.Select(
+            List<Order> order=  _context.Orders.Select(
                 order => new Order(){
                     OrderID = order.OrderID,
                     CustomerID = order.CustomerID,
@@ -267,7 +241,7 @@ namespace Data
                     
                 }
             ).Where(order => order.LocationID == LocationID).ToList();
-            return mOrders;         
+            return order;         
 
 
 

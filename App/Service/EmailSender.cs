@@ -7,7 +7,7 @@ namespace Service
 {
     public class EmailSender :  IEmailSender
     {
-        private SmtpClient _smtp;
+        private readonly SmtpClient _smtp;
          private MailAddress originEmail = new MailAddress("ddaydevtime@gmail.com"); 
          public EmailSender(SmtpClient smtp){
             _smtp = smtp;
