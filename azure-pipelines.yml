@@ -49,7 +49,7 @@ steps:
     displayName: Publish Code Coverage
     inputs:
       codeCoverageTool: 'Cobertura'
-      summaryFileLocation: '**/cobertura/coverage.xml'
+      summaryFileLocation: '**/*.coverage'
 
   - task: SonarCloudAnalyze@1
     displayName: Run Code Analysis
