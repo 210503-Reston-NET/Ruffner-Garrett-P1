@@ -73,8 +73,8 @@ steps:
       # summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/*'
       # additionalCodeCoverageFiles: 
       codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+      summaryFileLocation: 'Cobertura.xml'
+      reportDirectory: '$(Build.SourcesDirectory)/Report'
 
   # - task: DotNetCoreCLI@2
   #   displayName: Running Tests
