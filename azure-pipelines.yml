@@ -63,7 +63,7 @@ steps:
   #   displayName: 'Setup for tools'
   # /dotnetglobaltools/reportgenerator -reports:$(Build.SourcesDirectory)/TestResults/Coverage/* -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:Xml
   - script: |
-      /dotnetglobaltools/reportgenerator -reports:tests/**/coverage.cobertura.xml -targetdir:Report -reporttypes:HtmlInline_AzurePipelines;Cobertura
+      /dotnetglobaltools/reportgenerator -reports:**/coverage.cobertura.xml -targetdir:Report -reporttypes:HtmlInline_AzurePipelines;Cobertura
     displayName: 'Create code coverage report'
 
   - task: PublishCodeCoverageResults@1
