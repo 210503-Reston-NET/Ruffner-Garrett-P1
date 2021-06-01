@@ -54,12 +54,12 @@ steps:
       publishTestResults: true
       projects: '$(solution)'
     
-  - script: |
-      export PATH="$PATH:$HOME/.dotnet/tools"
-    displayName: 'Setup for tools'
+  # - script: |
+  #     export PATH="$PATH:$HOME/.dotnet/tools"
+  #   displayName: 'Setup for tools'
 
   - script: |
-      reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+      /dotnetglobaltools/reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
     displayName: 'Create code coverage report'
 
   - task: PublishCodeCoverageResults@1
