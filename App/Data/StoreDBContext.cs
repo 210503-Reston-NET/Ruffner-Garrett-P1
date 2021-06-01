@@ -25,7 +25,6 @@ namespace Data
             base.OnModelCreating(builder);
             builder.Entity<Location>().Property(obj => obj.LocationID).ValueGeneratedOnAdd();
             builder.Entity<Order>().Property(obj => obj.OrderID).ValueGeneratedOnAdd();
-            builder.Entity<Item>().Property(obj => obj.ItemID).ValueGeneratedOnAdd();
             builder.Entity<Product>().Property(obj => obj.ProductID).ValueGeneratedOnAdd();
             
             builder.Entity<InventoryItem>().HasKey(t => new {t.ProductID, t.LocationID});
