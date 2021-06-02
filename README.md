@@ -27,9 +27,9 @@ The Watch Shop is a simple web store that allows anyone to establish a shop fron
  - [x] WebApp should be deployed using Azure App Services
  - [x] A CI/CD pipeline should be established use Azure Pipelines
  - [x] Use ASP.NET MVC for the UI
- - [ ] DB structure should be 3NF
- - [ ] Should have an ER Diagram
- - [ ] Code should have xml documentation
+ - [x] DB structure should be 3NF
+ - [x] Should have an ER Diagram
+ - [x] Code should have xml documentation
 
 Tech Stack:
 * C#
@@ -41,4 +41,7 @@ Tech Stack:
 * Azure DevOps
 * ASP.NET MVC
 * ASP.NET Identity
+
+# ER Diagram
+![ER Diagram image](https://github.com/210503-Reston-NET/Ruffner-Garrett-P1/blob/c0ddb8b66e8a317dd244657868db4e0512aa2473/doc/P1_ERD.png)
 
