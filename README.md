@@ -2,23 +2,29 @@
 ## Overview:
 The Watch Shop is a simple web store that allows anyone to establish a shop front and sell their products!
 
+## Features
+ - 2FA With Microsoft Authenticator or Google Authenticator
+ - Email Verification
+ - Secure Account System
+ - Ability to Delete Account and Download your Data
+ - Create Shops and populate them with products
+ - Efficient DB design
+ - Customers can Create orders from any shop
+
 ## Functionality:
- - [x] Add a new customer
- - [x] Search customers by name
  - [x] Display details of an order
- - [x] Place orders to store locations for customers
- - [x] View order history of customer
- - [x] View order history of location
+ - [x] Customers can view their order history
+ - [x] Manager can view order history of location
  - [x] View location inventory
- - [x] The customer should be able to purchase multiple products
- - [x] Order histories should have the option to be sorted by date (latest to oldest and vice versa) or cost (least expensive to most expensive)
- - [x] The manager should be able to replenish inventory
+ - [x] The customer Can be able to purchase multiple products per order
+ - [x] Order histories have the option to be sorted by date (latest to oldest and vice versa) or cost (least expensive to most expensive)
+ - [x] Store Manageer can replenish inventory
 
 ## Additional requirements:
  - [x] Exception Handling
  - [x] Input validation
  - [x] Logging (useful ones)
- - [x] At least 20 unit tests:
+ - [x] At least 20 unit tests
  - [x] Use Moq and Sqlite for testing
  - [x] DB methods should be tested
  - [x] Data should be persisted, (no data should be hard coded)
